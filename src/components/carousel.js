@@ -2,13 +2,13 @@ import React from 'react';
 import { Nav, Navbar, Form, FormControl,Carousel } from 'react-bootstrap';
 
 export const CarouselApp = () => (
-<Carousel style={{height:300}}>
+<Carousel style={{height:200}}>
   <Carousel.Item interval={1000}>
     <img
       className="d-block w-100"
       src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
       alt="First slide"
-      style={{height:300}}
+      style={{height:200}}
     />
     <Carousel.Caption>
       <h3>First slide label</h3>
@@ -20,7 +20,7 @@ export const CarouselApp = () => (
       className="d-block w-100"
       src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg"
       alt="Second slide"
-      style={{height:300}}
+      style={{height:200}}
     />
     <Carousel.Caption>
       <h3>Second slide label</h3>
@@ -32,7 +32,7 @@ export const CarouselApp = () => (
       className="d-block w-100"
       src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
       alt="Third slide"
-      style={{height:300}}
+      style={{height:200}}
     />
     <Carousel.Caption>
       <h3>Third slide label</h3>
