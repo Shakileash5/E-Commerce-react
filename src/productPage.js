@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent:"flex-start"
   },
   paper: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(4),
     margin: 'auto',
     maxWidth: "100%",
     maxHeight: "100%"
@@ -75,11 +75,8 @@ const useStyles = makeStyles((theme) => ({
   },
   root2: {
     display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
     listStyle: 'none',
     padding: theme.spacing(0.5),
-    margin: 0,
     alignItems:"flex-start"
   },
   chip: {
