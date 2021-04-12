@@ -7,7 +7,6 @@ import styled, { createGlobalStyle } from "styled-components";
 import Exper from "./experiment.js";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import SingleLineGridList from "./newList";
 
 
 const SampleCard = styled.div`

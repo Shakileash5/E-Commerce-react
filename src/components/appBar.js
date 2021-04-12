@@ -193,7 +193,7 @@ export default function PrimarySearchAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            E-Commerce
+            WEB-FX
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
