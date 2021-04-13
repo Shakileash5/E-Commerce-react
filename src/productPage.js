@@ -1,6 +1,3 @@
-import logo from './logo.svg';
-import './App.css';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import PrimarySearchAppBar from './components/appBar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import React from 'react';
@@ -64,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     height: 100,
     borderRadius:1,
     borderWidth:1,
+    margin:5
 
   },
   img: {
@@ -87,7 +85,8 @@ const useStyles = makeStyles((theme) => ({
 
 function Product() {
     const classes = useStyles();
-    
+    const urlArr = [];
+    const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
     const [chipData, setChipData] = React.useState([
         { key: 0, label: 'Angular' },
         { key: 1, label: 'jQuery' },
@@ -99,9 +98,18 @@ function Product() {
      
     ]);
     
+
+
+
     const handleDelete = (chipToDelete) => () => {
         setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
     };
+
+    const changeSrc = (src)=>()=>{
+        console.log("src changed");
+        var url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRQ2QicbufytX1bTxF3xcQUBKpLoaSWb9dEA&usqp=CAU";
+        setImgSrc(url)
+    }
 
     return (
         <div className="App">
@@ -132,25 +140,25 @@ function Product() {
                 <div className={classes.paper}>
                     <Grid container spacing={8}>
                         
-                        <Grid item xs container direction="row">
+                        <Grid item xs container direction="row" >
                             <Grid item xs container direction="column" spacing={2} alignItems="flex-start">
                                 <Grid item>
                                     <Paper className={classes.paper2}>
-                                        <ButtonBase  className={classes.imageSmall}>
+                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc("val")}>
                                             <img className={classes.img}  src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg" />
                                         </ButtonBase >
                                     </Paper>
                                 </Grid>
                                 <Grid item>
                                     <Paper className={classes.paper2}>
-                                        <ButtonBase  className={classes.imageSmall}>
+                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc("val")}>
                                             <img className={classes.img}  src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg" />
                                         </ButtonBase >
                                     </Paper>
                                 </Grid>
                                 <Grid item>
                                     <Paper className={classes.paper2}>
-                                        <ButtonBase  className={classes.imageSmall}>
+                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc("val")}>
                                             <img className={classes.img}  src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg" />
                                         </ButtonBase >
                                     </Paper>
@@ -158,7 +166,7 @@ function Product() {
                             </Grid>
                             <div className={classes.paper2}>
                                     <ButtonBase  className={classes.image}>
-                                        <img className={classes.img}  src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg" />
+                                        <img className={classes.img} id="mainImg" src={imgSrc} />
                                     </ButtonBase >
                             </div>
                         </Grid>
