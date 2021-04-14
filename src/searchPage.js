@@ -59,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
 function Search() {
     const classes = useStyles();
     const history = useHistory();
+    const [data,setData] = React.useState([]);
+    const [viewData,setViewData] = React.useState([]);
+    const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [chipData, setChipData] = React.useState([
         { key: 0, label: 'Angular' },
         { key: 1, label: 'jQuery' },
@@ -72,17 +75,35 @@ function Search() {
     
     const navigateTo = (flag)=>()=>{
         //history.push("/product");
-        if( flag == 1){
-            history.push("/product");
+        if( flag >=0){
+            history.push("/product/"+flag);
         }
-
-        console.log("clicked")
     };
 
+    const constructor = ()=>{
+        if(constructorFlag == 0){
+
+            let tempData = [
+                {
+                    key:1, name: "Smart 12 Inch tv samsung", Price: 26900
+                },
+                {
+                    key:2, name: "Smart 12 Inch tv samsung", Price: 26900
+                },
+            ]
+            setConstructorFlag(1);
+            setData(tempData);
+            //setViewData(tempData);
+
+        }
+    }
 
     const handleDelete = (chipToDelete) => () => {
         setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
     };
+
+    constructor();
+
     return (
         <div className="App">
             <PrimarySearchAppBar />
@@ -109,17 +130,17 @@ function Search() {
                 })}
             </Paper>
             <div style={{justify:"center",alignSelf:"center",margin: 20}}>
-            <Grid container >
-                <div onClick={navigateTo(1)}>
-                    <MiniCard  />
-                </div>
+            <Grid container spacing={1} direction="row">
+              {
+                data.map((data,i)=>{
+                  return(
+                    <div key={data.key} onClick={navigateTo(i)}>
+                        <MiniCard name={data.name} price ={data.Price} />
+                    </div>
+                  );
+                })
+              }
                 
-                <MiniCard />
-                <MiniCard />
-                <MiniCard />
-                <MiniCard />
-                <MiniCard />
-                <MiniCard />
             </Grid>
             
             </div>

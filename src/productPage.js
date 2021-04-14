@@ -14,6 +14,7 @@ import { green } from '@material-ui/core/colors';
 import TagFacesIcon from '@material-ui/icons/TagFaces';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
+import {Link, useLocation} from "react-router-dom";
 
 
 const themeCustom = createMuiTheme({
@@ -85,8 +86,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Product() {
     const classes = useStyles();
-    const urlArr = [];
+    const [urlArr,setUrlArr] = React.useState([]);
+    const [data,setData] = React.useState({});
+    const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
+    const [id,setId] = React.useState(-1);
+    var idTemp = -1;
     const [chipData, setChipData] = React.useState([
         { key: 0, label: 'Angular' },
         { key: 1, label: 'jQuery' },
@@ -97,9 +102,49 @@ function Product() {
         { key: 6, label: 'jQuery' },
      
     ]);
-    
+    var location = useLocation();
 
+    const getMetaData = ()=>{
+        console.log(location);
+        let splitData = location.pathname.split("/");
+        setId(parseInt(splitData[splitData.length-1]));
+        idTemp = parseInt(splitData[splitData.length-1]);
+        console.log(id,splitData,parseInt(splitData[splitData.length-1]))
+    }
 
+    const constructor = ()=>{
+        if(constructorFlag == 0){
+
+            let tempData = [
+                {
+                    key:1, name: "Smart 12 Inch tv samsung", Price: 26900, 
+                    src1:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8P-nx0FswkMiwW5wCA5hZcPG1H5kG57DAyg&usqp=CAU",
+                    src2:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHEGYXv30RbfDIllC4j7rrx6XeHFCcd_LPKQ&usqp=CAU",
+                    src3:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcc1K6-WPl6yl84xsY7rROhOMznnJ0FS9gew&usqp=CAU",
+                    stock:1,category:"TV"
+                },
+                {
+                    key:2, name: "Smart 15 Inch android tv phiilips ", Price: 38000, 
+                    src1:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREpRVqfWMlrypPhH4ta1uzWO0Cm_IqCQdU3g&usqp=CAU",
+                    src2:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiWoQ0fFDZyGiaEgCLSdfi3_PNc4US_Cv8LA&usqp=CAU",
+                    src3:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSCd0MB2bEFUXPlZxLTl0J3vI3Z8Jnw2J4UA&usqp=CAU",
+                    stock:1,
+                    category:"TV"
+                },
+            ]
+            setConstructorFlag(1);
+            getMetaData();
+            setData(tempData[idTemp]);
+            console.log(idTemp,tempData,"data")
+            setImgSrc(tempData[idTemp].src1);
+            
+            console.log(data,tempData)  
+            let arr = [tempData[idTemp].src1,tempData[idTemp].src2,tempData[idTemp].src3];
+            setUrlArr(arr)
+            //setViewData(tempData);
+
+        }
+    }
 
     const handleDelete = (chipToDelete) => () => {
         setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
@@ -108,8 +153,10 @@ function Product() {
     const changeSrc = (src)=>()=>{
         console.log("src changed");
         var url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRQ2QicbufytX1bTxF3xcQUBKpLoaSWb9dEA&usqp=CAU";
-        setImgSrc(url)
+        setImgSrc(src)
     }
+
+    constructor();
 
     return (
         <div className="App">
@@ -144,22 +191,22 @@ function Product() {
                             <Grid item xs container direction="column" spacing={2} alignItems="flex-start">
                                 <Grid item>
                                     <Paper className={classes.paper2}>
-                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc("val")}>
-                                            <img className={classes.img}  src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg" />
+                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc(urlArr[1])}>
+                                            <img className={classes.img}  src={urlArr[0]} />
                                         </ButtonBase >
                                     </Paper>
                                 </Grid>
                                 <Grid item>
                                     <Paper className={classes.paper2}>
-                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc("val")}>
-                                            <img className={classes.img}  src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg" />
+                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc(urlArr[1])}>
+                                            <img className={classes.img}  src={urlArr[1]} />
                                         </ButtonBase >
                                     </Paper>
                                 </Grid>
                                 <Grid item>
                                     <Paper className={classes.paper2}>
-                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc("val")}>
-                                            <img className={classes.img}  src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg" />
+                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc(urlArr[2])}>
+                                            <img className={classes.img}  src={urlArr[2]} />
                                         </ButtonBase >
                                     </Paper>
                                 </Grid>
@@ -170,10 +217,10 @@ function Product() {
                                     </ButtonBase >
                             </div>
                         </Grid>
-                        <Grid item xs={15} sm container alignItems="center">
+                        <Grid item xs sm container alignItems="center">
                             <Grid item xs container direction="column" spacing={2} alignItems="flex-start">
                                 <Typography gutterBottom variant="h4">
-                                    Royal pipes 3Mg 45G total quality
+                                    {data.name}
                                 </Typography>
 
                                 <Chip label="Pipes" color="primary" />

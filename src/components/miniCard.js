@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
  
 }));
 
-function MiniCard() {
+function MiniCard({name,price}) {
     const classes = useStyles();
     return (
         <div className="App">
@@ -48,20 +48,14 @@ function MiniCard() {
                         />
                         <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
-                            Flat 32 Inch Tv Samsumg
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            Price: 24200
+                            {name}
                         </Typography>
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <Button size="small" color="primary">
-                        Share
-                        </Button>
-                        <Button size="small" color="primary">
-                        Learn More
-                        </Button>
+                        <Typography variant="body2" color="textSecondary" component="span" style={{margin:10}}>
+                            Price: {price}
+                        </Typography>
                     </CardActions>
                 </Card>
             </Grid>

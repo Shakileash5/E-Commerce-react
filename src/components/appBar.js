@@ -18,6 +18,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 import green from '@material-ui/core/colors/green';
 import purple from '@material-ui/core/colors/purple';
+import { useHistory } from 'react-router';
 
 const theme = createMuiTheme({
   palette: {
@@ -99,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -117,6 +119,12 @@ export default function PrimarySearchAppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+
+  const navigateTo = (flag)=>()=>{
+    if(flag == 1){
+      history.push("/cart")
+    }
+  }
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -215,7 +223,7 @@ export default function PrimarySearchAppBar() {
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
+            <IconButton aria-label="show 17 new notifications" color="inherit" onClick={navigateTo(1)}>
               <Badge badgeContent={17} color="secondary">
                 <ShoppingCart />
               </Badge>
