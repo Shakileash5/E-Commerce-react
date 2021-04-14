@@ -107,6 +107,7 @@ function Search() {
     return (
         <div className="App">
             <PrimarySearchAppBar />
+            
             <Paper component="ul" className={classes.root2}>
                 {chipData.map((data) => {
                     let icon;
