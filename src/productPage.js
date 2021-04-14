@@ -191,7 +191,7 @@ function Product() {
                             <Grid item xs container direction="column" spacing={2} alignItems="flex-start">
                                 <Grid item>
                                     <Paper className={classes.paper2}>
-                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc(urlArr[1])}>
+                                        <ButtonBase  className={classes.imageSmall} onClick={changeSrc(urlArr[0])}>
                                             <img className={classes.img}  src={urlArr[0]} />
                                         </ButtonBase >
                                     </Paper>
