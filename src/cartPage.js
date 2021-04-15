@@ -204,6 +204,9 @@ function Cart() {
     return (
         <div className="App" className={classes.root}>
             <PrimarySearchAppBar />
+            <Backdrop className={classes.backdrop} open={refreshing} >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Paper component="ul" className={classes.root2}>
                 {chipData.map((data) => {
                     let icon;
@@ -295,9 +298,7 @@ function Cart() {
                     </Grid>
                 </Grid>
             </Grid>
-            <Backdrop className={classes.backdrop} open={refreshing} >
-                <CircularProgress color="inherit" />
-            </Backdrop>
+            
         </div>
     );
     }

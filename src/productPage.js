@@ -51,21 +51,23 @@ const useStyles = makeStyles((theme) => ({
   paper2: {
     margin: 'auto',
     maxWidth: "100%",
-    maxHeight: "100%"
+    maxHeight: "100%",
+    zIndex:0
   },
   image: {
     width: 500,
     height: 500,
     borderRadius:15,
     borderWidth:1,
-
+    zIndex:0
   },
   imageSmall: {
     width: 100,
     height: 100,
     borderRadius:1,
     borderWidth:1,
-    margin:5
+    margin:5,
+    zIndex:0
 
   },
   img: {
@@ -74,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     maxHeight: '100%',
     borderRadius:1,
+    zIndex:0
   },
   root2: {
     display: 'flex',

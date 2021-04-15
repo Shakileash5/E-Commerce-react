@@ -35,11 +35,17 @@ import Button from '@material-ui/core/Button';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import firebase from './firebase';
 import "firebase/auth";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 function getModalStyle() {
@@ -151,6 +157,16 @@ export default function PrimarySearchAppBar() {
   const [error,setError] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [constructorHasRun,setConstructorHasRun] = React.useState(false);
+  const [snack,setSnack] = React.useState(0);
+  const [snackMessage,setSnackMessage] = React.useState("");
+  const [snackSeverity,setSnackSeverity] = React.useState("success")
+  const handleSnackClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    console.log("setSnack")
+    setSnack(0);
+  };
   const [values, setValues] = React.useState({
     userName: '',
     password: '',
@@ -207,17 +223,25 @@ export default function PrimarySearchAppBar() {
                 const uid = response.user.uid;
                 console.log(uid,":: uid");
                 //navigation1.navigate('MyTabs',{userId:uid.toString()});
+                setSnack(1);
+                setSnackMessage("SignedIn successfully!");
+                setSnackSeverity("success");
                 setUid(uid.toString());
             }).catch(err =>{
                 console.log("err",err);
                 setError(1);
+                setSnack(1);
+                setSnackMessage("Please enter Valid Data!");
+                setSnackSeverity("error");
             }).finally(()=>{
                 setRefreshing(false);
                 setOpen(false);
             });
         }
         else{
-            setError(1);
+            setSnack(1);
+            setSnackMessage("Please enter Valid Data!");
+            setSnackSeverity("error");
             setOpen(false);
         }
   }
@@ -234,10 +258,16 @@ export default function PrimarySearchAppBar() {
                     const uid = response.user.uid;
                     console.log("uid ::: ",uid);
                     setUid(uid.toString());
+                    setSnack(1);
+                    setSnackMessage("Signed up successfully");
+                    setSnackSeverity("success");
                    // navigation1.navigate("Login")
                 }).catch(err =>{
                      console.log("err",err);
                      setError(1);
+                     setSnack(1);
+                     setSnackMessage("Please enter Valid Data!");
+                     setSnackSeverity("error");
                      //setErrorMessage(err.message); 
                 }).finally(()=>{
                     setRefreshing(false);
@@ -246,6 +276,9 @@ export default function PrimarySearchAppBar() {
         }
         else{
             setError(1);
+            setSnack(1);
+            setSnackMessage("Please enter Valid Data!");
+            setSnackSeverity("error");
             //setErrorMessage("Enter userName and password");
             setOpen(false);
         }
@@ -258,6 +291,8 @@ export default function PrimarySearchAppBar() {
         console.log("logged Out")
         setIsLogged(0);
         setOpen(false);
+        setSnack(1);
+        setSnackMessage("logged Out Succesfully!")
       }
       catch(err){
         console.log("Error",err)
@@ -426,7 +461,7 @@ export default function PrimarySearchAppBar() {
         }
         console.log("act like constructor");
         //retrieveData();
-        setRefreshing(true);
+        //setRefreshing(true);
         firebase.auth().onAuthStateChanged(user =>{
             //console.log(user,"pakalam pa");
             if(user){
@@ -434,7 +469,7 @@ export default function PrimarySearchAppBar() {
                 setUid(user.uid.toString());
                 setIsLogged(1)
             }
-            setRefreshing(false);
+            //setRefreshing(false);
         })
         setConstructorHasRun(true);
     }
@@ -547,6 +582,11 @@ export default function PrimarySearchAppBar() {
       <Backdrop className={classes.backdrop} open={refreshing} >
         <CircularProgress color="inherit" />
       </Backdrop>
+      <Snackbar open={snack} autoHideDuration={6000} onClose={handleSnackClose}>
+        <Alert  severity={snackSeverity} onClose={handleSnackClose}>
+          {snackMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
