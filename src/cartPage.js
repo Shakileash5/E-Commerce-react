@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import PrimarySearchAppBar from './components/appBar';
+import PrimarySearchAppBar from './appBar';
 import MiniCard from "./components/miniCard";
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import React from 'react';
@@ -170,8 +170,8 @@ function Cart() {
 
     const navigateTo = (flag)=>()=>{
         //history.push("/product");
-        if( flag == 1){
-            history.push("/product");
+        if( flag>=0){
+            history.push("/product/"+flag);
         }
 
         console.log("clicked")
@@ -217,7 +217,7 @@ function Cart() {
                             <Grid key={i} item sm container >
                                 <div  className={classes.items}>
                                     <Grid container spacing={5} >
-                                        <div className={classes.paper2} onClick={navigateTo(1)}>
+                                        <div className={classes.paper2} onClick={navigateTo(i)}>
                                                     
                                             <img className={classes.img} id="mainImg" src={imgSrc} />
                                                     

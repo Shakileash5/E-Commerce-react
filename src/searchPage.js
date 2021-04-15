@@ -1,7 +1,4 @@
-import logo from './logo.svg';
-import './App.css';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import PrimarySearchAppBar from './components/appBar';
+import PrimarySearchAppBar from './appBar';
 import MiniCard from "./components/miniCard";
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import React from 'react';

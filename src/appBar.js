@@ -19,10 +19,37 @@ import blue from '@material-ui/core/colors/blue';
 import green from '@material-ui/core/colors/green';
 import purple from '@material-ui/core/colors/purple';
 import { useHistory } from 'react-router';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Asynchronous from "./searchbar";
+import Modal from '@material-ui/core/Modal';
+import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import clsx from 'clsx';
+import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Grid from '@material-ui/core/Grid';
 
+
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const theme = createMuiTheme({
   palette: {
@@ -35,7 +62,8 @@ const theme = createMuiTheme({
       dark: '#ba000d',
       contrastText: '#000',
     }
-  }
+  },
+ 
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -100,13 +128,44 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+   paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    borderRadius:15,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
 }));
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const history = useHistory();
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [isLoggedIn,setIsLogged] = React.useState(0);
+  const [values, setValues] = React.useState({
+    userName: '',
+    password: '',
+    weight: '',
+    weightRange: '',
+    showPassword: false,
+  });
+  const [screen,setScreen] = React.useState(0);
+
+  const handleChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
+
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -124,9 +183,140 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+    setScreen(0);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const body = (
+    <div style={modalStyle} className={classes.paper}>
+    {
+      screen==0?
+        <div>
+        <h2 id="simple-modal-title">SignIn</h2>
+        <Grid container direction={"row"}>
+          <Grid item>
+          <FormControl className={clsx(classes.margin, classes.textField)}>
+            
+            <InputLabel htmlFor="standard-adornment-uname">UserName</InputLabel>
+              <Input
+                id="standard-adornment-uname"
+                type={'text'}
+                value={values.userName}
+                onChange={handleChange('userName')}
+              />
+          </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl className={clsx(classes.margin, classes.textField)}>
+            
+            <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+              <Input
+                id="standard-adornment-password"
+                type={values.showPassword ? 'text' : 'password'}
+                value={values.password}
+                onChange={handleChange('password')}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+          </FormControl>
+          </Grid>
+        </Grid>
+            <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            style={{marginTop:10}}
+            >
+            signIn
+        </Button>
+        <Typography variant="body1">
+          haven't signed Up yet?<Typography variant="body1" color="secondary" onClick={()=>{setScreen(1)}}>
+          signup
+        </Typography>
+        </Typography>
+        </div>
+        :
+        <div>
+        <h2 id="simple-modal-title">SignUp</h2>
+        <Grid container direction={"row"}>
+          <Grid item>
+          <FormControl className={clsx(classes.margin, classes.textField)}>
+            
+            <InputLabel htmlFor="standard-adornment-uname">UserName</InputLabel>
+              <Input
+                id="standard-adornment-uname"
+                type={'text'}
+                value={values.userName}
+                onChange={handleChange('userName')}
+              />
+          </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl className={clsx(classes.margin, classes.textField)}>
+            
+            <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+              <Input
+                id="standard-adornment-password"
+                type={values.showPassword ? 'text' : 'password'}
+                value={values.password}
+                onChange={handleChange('password')}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+          </FormControl>
+          </Grid>
+        </Grid>
+            <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            style={{marginTop:10}}
+            >
+            signUp
+        </Button>
+        <Typography variant="body1">
+          Already signed in?
+          <Typography variant="body1" color="secondary" onClick={()=>{setScreen(0)}}>
+            signIn
+          </Typography>
+        </Typography>
+      
+        </div>
+        }
+        
+    </div>
+  );
+
   const navigateTo = (flag)=>()=>{
     if(flag == 1){
       history.push("/cart")
+    }
+    else if(flag == 0){
+      history.push("/")
+
     }
   }
 
@@ -145,8 +335,14 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {
+        isLoggedIn?
+        <MenuItem onClick={handleMenuClose}>LogOut</MenuItem>
+        :
+        <MenuItem onClick={handleOpen}>SignIn</MenuItem>
+      }
+
+
     </Menu>
   );
 
@@ -204,7 +400,7 @@ export default function PrimarySearchAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h6" noWrap onClick={navigateTo(0)}>
             WEB-FX
           </Typography>
           <Asynchronous/>   
@@ -247,6 +443,14 @@ export default function PrimarySearchAppBar() {
       </ThemeProvider>
       {renderMobileMenu}
       {renderMenu}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        {body}
+      </Modal>
     </div>
   );
 }

@@ -1,7 +1,20 @@
 import React from 'react';
 import { Nav, Navbar, Form, FormControl,Carousel } from 'react-bootstrap';
+import { useHistory } from 'react-router';
 
-export const CarouselApp = () => (
+export const CarouselApp = () => {
+    const history = useHistory();
+    
+    const navigateTo = (flag)=>{
+        //history.push("/product");
+        console.log("cebi")
+        history.push("/search");
+        if( flag){
+            history.push("/search/"+flag);
+        }
+    };
+    
+  return(
 <Carousel style={{height:200}}>
   <Carousel.Item interval={1000}>
     <img
@@ -40,4 +53,4 @@ export const CarouselApp = () => (
     </Carousel.Caption>
   </Carousel.Item>
 </Carousel>
-);
+);}

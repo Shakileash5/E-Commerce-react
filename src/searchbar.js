@@ -3,6 +3,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useHistory } from 'react-router';
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -12,8 +13,18 @@ function sleep(delay = 0) {
 
 export default function Asynchronous() {
   const [open, setOpen] = React.useState(false);
+  const history = useHistory();
   const [options, setOptions] = React.useState(["Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"]);
   const loading = open && options.length === 0;
+
+  const navigateTo = (flag)=>{
+        //history.push("/product");
+        console.log("cebi")
+        history.push("/search");
+        if( flag){
+            history.push("/search/"+flag);
+        }
+    };
 
   React.useEffect(() => {
     let active = true;
@@ -62,10 +73,11 @@ export default function Asynchronous() {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionSelected={(option, value) => option.name === value.name}
+      getOptionSelected={(option, value) => {navigateTo(value.name)}}
       getOptionLabel={(option) => option.name}
       options={options}
       loading={loading}
+      onChange={(val)=>{console.log("fewbfui",val);}}
       renderInput={(params) => (
         <TextField
            style={{border: '0px solid rgba(0, 0, 0, 0.05)'}}  

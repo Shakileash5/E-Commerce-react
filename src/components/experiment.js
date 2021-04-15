@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import ScrollMenu from 'react-horizontal-scrolling-menu';
-import './exper.css';
+import './components/exper.css';
 import Typography from '@material-ui/core/Typography';
+import { withRouter } from 'react-router-dom'    
+import { useHistory } from 'react-router';
 
 // list of items
 const list = [
@@ -41,12 +43,21 @@ const MenuItem = ({text, selected}) => {
 // All items component
 // Important! add unique key
 const Card = ({text,src,key,idx})=>{
+  const history = useHistory();
+  const navigateTo = (flag)=>{
+        history.push("/product/1");
+        //console.log("cebi")
+        if( flag){
+            history.push("/search/"+flag);
+        }
+    }
     return(
         <div style={{padding:10,margin:8,borderRadius:5,borderWidth:1,backgroundColor:colorList[idx], boxShadow: '4px 3px 4px grey'}} key={key} >
             <img
             src={src}
             alt="Second slide"
             style={{height:150,width:200,borderRadius:5}}
+            onClick={()=>{console.log("clicked");navigateTo("vs")}}
             />    
             <Typography variant="h6" component="h6" style={{padding:5}} align="left">  
                 {text}
@@ -81,7 +92,7 @@ const ArrowRight = Arrow({ text: '>', className: 'arrow-next' });
 
 const selected = 'item1';
 
-export default class Exper extends Component {
+class Exper extends Component {
   constructor(props) {
     super(props);
     // call it again if items count changes
@@ -92,6 +103,8 @@ export default class Exper extends Component {
     selected
   };
 
+  
+
   onSelect = key => {
     this.setState({ selected: key });
   }
@@ -101,6 +114,8 @@ export default class Exper extends Component {
     const { selected } = this.state;
     // Create menu from items
     const menu = this.menuItems;
+    const { location, history } = this.props
+    
 
     return (
       <div className="App" style={{marginBottom:25}}>
@@ -114,3 +129,5 @@ export default class Exper extends Component {
     );
   }
 }
+
+export default withRouter(Exper)

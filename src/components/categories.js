@@ -4,9 +4,13 @@ import Typography from '@material-ui/core/Typography';
 //import HorizontalScroll from './horizontalScroll.js';
 //import HorizontalScroll from 'react-scroll-horizontal'
 import styled, { createGlobalStyle } from "styled-components";
-import Exper from "./experiment.js";
+//import Exper from "./experiment.js";
+import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Grid from '@material-ui/core/Grid';
+import MiniCard from "./miniCard";
+import { useHistory } from 'react-router';
 
 
 const SampleCard = styled.div`
@@ -17,7 +21,36 @@ const SampleCard = styled.div`
   margin-right: 75px;
   flex-shrink: 0;
 `;
-
+const useStyles = makeStyles((theme) => ({
+   root: {
+    maxWidth: 345,
+  },
+  details: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  content: {
+    flex: '1 0 auto',
+  },
+  cover: {
+    width: 151,
+  },
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+  },
+  root2: {
+    display: 'flex',
+    listStyle: 'none',
+    padding: theme.spacing(0.5),
+    alignItems:"flex-start"
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
+}));
 const SampleCards = React.memo(() =>
   Array(5)
     .fill(0)
@@ -48,17 +81,73 @@ const SampleCards = React.memo(() =>
   color:"white",
 };
 
-export const CategorySlider = () => (
-  
-<div style={{padding:10}}>
-        <Typography variant="h4" component="h3" align="left">
-          Top Category
-        </Typography>
-       <Exper />
+export const CategorySlider = () => {
+  const classes = useStyles();
+    const history = useHistory();
+    const [data,setData] = React.useState([]);
+    const [viewData,setViewData] = React.useState([]);
+    const [constructorFlag,setConstructorFlag] = React.useState(0);
+    const [chipData, setChipData] = React.useState([
+        { key: 0, label: 'Angular' },
+        { key: 1, label: 'jQuery' },
+        { key: 2, label: 'Polymer' },
+        { key: 3, label: 'React' },
+        { key: 4, label: 'Vue.js' },
+        { key: 5, label: 'Angular' },
+        { key: 6, label: 'jQuery' },
+     
+    ]);
+    
+    const navigateTo = (flag)=>()=>{
+        if( flag >=0){
+            history.push("/product/"+flag);
+        }
+    };
 
-          
-    </div>
+    const constructor = ()=>{
+        if(constructorFlag == 0){
+
+            let tempData = [
+                {
+                    key:1, name: "Smart 12 Inch tv samsung", Price: 26900
+                },
+                {
+                    key:2, name: "Smart 12 Inch tv samsung", Price: 26900
+                },
+            ]
+            setConstructorFlag(1);
+            setData(tempData);
+            //setViewData(tempData);
+
+        }
+    }
+    //<Exper />
+    constructor()
+  return(
+  
+  <div style={{padding:10}}>
+          <Typography variant="h4" component="h3" align="left">
+            Top Category
+          </Typography>
+        <div style={{justify:"center",alignSelf:"center",margin: 20}}>
+            <Grid container spacing={1} direction="row">
+              {
+                data.map((data,i)=>{
+                  return(
+                    <div key={data.key} onClick={navigateTo(i)}>
+                        <MiniCard name={data.name} price ={data.Price} />
+                    </div>
+                  );
+                })
+              }
+                
+            </Grid>
+            
+            </div>
+
+            
+  </div>
    
     
     
-)
+)}

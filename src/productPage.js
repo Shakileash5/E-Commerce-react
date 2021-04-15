@@ -1,4 +1,4 @@
-import PrimarySearchAppBar from './components/appBar';
+import PrimarySearchAppBar from './appBar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
