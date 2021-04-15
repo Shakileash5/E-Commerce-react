@@ -23,6 +23,8 @@ import blue from '@material-ui/core/colors/blue';
 import { useHistory } from 'react-router';
 import firebase from './firebase';
 import "firebase/auth";
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -71,7 +73,8 @@ function Search() {
         { key: 6, label: 'jQuery' },
      
     ]);
-    
+    const [refreshing, setRefreshing] = React.useState(false);
+
     const navigateTo = (flag)=>()=>{
         //history.push("/product");
         if( flag >=0){
@@ -81,7 +84,7 @@ function Search() {
 
     const constructor = ()=>{
         if(constructorFlag == 0){
-
+            setRefreshing(true);
             let tempData = [
                 {
                     key:1, name: "Smart 12 Inch tv samsung", Price: 26900
@@ -92,6 +95,7 @@ function Search() {
             ]
             setConstructorFlag(1);
             setData(tempData);
+            setRefreshing(false);
             //setViewData(tempData);
 
         }
@@ -144,6 +148,9 @@ function Search() {
             </Grid>
             
             </div>
+            <Backdrop className={classes.backdrop} open={refreshing} >
+              <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     );
     }

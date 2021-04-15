@@ -154,7 +154,7 @@ function Product() {
             setData(tempData[idTemp]);
             console.log(idTemp,tempData,"data")
             setImgSrc(tempData[idTemp].src1);
-            
+            checkStatus();
             console.log(data,tempData)  
             let arr = [tempData[idTemp].src1,tempData[idTemp].src2,tempData[idTemp].src3];
             setUrlArr(arr)

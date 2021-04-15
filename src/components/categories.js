@@ -11,6 +11,8 @@ import ListItem from '@material-ui/core/ListItem';
 import Grid from '@material-ui/core/Grid';
 import MiniCard from "./miniCard";
 import { useHistory } from 'react-router';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const SampleCard = styled.div`
@@ -97,6 +99,7 @@ export const CategorySlider = () => {
         { key: 6, label: 'jQuery' },
      
     ]);
+    const [refreshing, setRefreshing] = React.useState(false);
     
     const navigateTo = (flag)=>()=>{
         if( flag >=0){
@@ -106,7 +109,7 @@ export const CategorySlider = () => {
 
     const constructor = ()=>{
         if(constructorFlag == 0){
-
+            setRefreshing(true);
             let tempData = [
                 {
                     key:1, name: "Smart 12 Inch tv samsung", Price: 26900
@@ -117,12 +120,13 @@ export const CategorySlider = () => {
             ]
             setConstructorFlag(1);
             setData(tempData);
+            setRefreshing(false);
             //setViewData(tempData);
 
         }
     }
     //<Exper />
-    constructor()
+    constructor();
   return(
   
   <div style={{padding:10}}>
@@ -144,6 +148,9 @@ export const CategorySlider = () => {
             </Grid>
             
             </div>
+            <Backdrop className={classes.backdrop} open={refreshing} >
+              <CircularProgress color="inherit" />
+            </Backdrop>
 
             
   </div>

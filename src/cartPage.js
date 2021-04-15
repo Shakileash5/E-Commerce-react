@@ -27,6 +27,8 @@ import blue from '@material-ui/core/colors/blue';
 import { useHistory } from 'react-router';
 import firebase from './firebase';
 import "firebase/auth";
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -127,6 +129,8 @@ function Cart() {
 
     const [data,setData] = React.useState([]);
     const [viewData,setViewData] = React.useState([]);
+    const [uid,setUid] = React.useState('');
+    const [refreshing, setRefreshing] = React.useState(false);
 
     const getSummary = (datas)=>{
         let quantity = 0;
@@ -142,6 +146,18 @@ function Cart() {
         setTotalQuantity(quantity);
     }
 
+    const checkStatus = ()=>()=>{
+        setRefreshing(true);
+        firebase.auth().onAuthStateChanged(user =>{
+            //console.log(user,"pakalam pa");
+            if(user){
+                //navigation1.navigate('MyTabs',{userId:user.uid.toString()});
+                setUid(user.uid.toString());
+            }
+            setRefreshing(false);
+        })
+    }
+
     const constructor = ()=>{
         if(constructorFlag == 0){
 
@@ -155,6 +171,7 @@ function Cart() {
             ]
             console.log("working");
             setConstructorFlag(1);
+            checkStatus();
             setData(tempData);
             getSummary(tempData);
             //setViewData(tempData);
@@ -278,7 +295,9 @@ function Cart() {
                     </Grid>
                 </Grid>
             </Grid>
-            
+            <Backdrop className={classes.backdrop} open={refreshing} >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     );
     }
