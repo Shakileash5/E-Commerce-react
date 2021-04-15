@@ -19,6 +19,8 @@ import firebase from './firebase';
 import "firebase/auth";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const themeCustom = createMuiTheme({
   palette: {
@@ -33,6 +35,10 @@ const themeCustom = createMuiTheme({
     }
   }
 });
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -97,6 +103,16 @@ function Product() {
     const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
     const [id,setId] = React.useState(-1);
+    const [snack,setSnack] = React.useState(0);
+    const [snackMessage,setSnackMessage] = React.useState("");
+    const [snackSeverity,setSnackSeverity] = React.useState("success")
+    const handleSnackClose = (event, reason) => {
+        if (reason === 'clickaway') {
+        return;
+        }
+        console.log("setSnack")
+        setSnack(0);
+    };
     var idTemp = -1;
     const [chipData, setChipData] = React.useState([
         { key: 0, label: 'Angular' },
@@ -169,6 +185,20 @@ function Product() {
     const handleDelete = (chipToDelete) => () => {
         setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
     };
+
+    const addProduct = ()=>()=>{
+        console.log("add Product")
+        try{
+            setSnack(1);
+            setSnackMessage("product added Successfully!");
+            setSnackSeverity("success");
+        }
+        catch(err){
+            setSnack(1);
+            setSnackMessage("Something went wront!");
+            setSnackSeverity("info");
+        }
+    }
 
     const changeSrc = (src)=>()=>{
         console.log("src changed");
@@ -264,6 +294,7 @@ function Product() {
                                     color="secondary"
                                     className={classes.button}
                                     startIcon={<AddShoppingCartIcon />}
+                                    onClick={addProduct()}
                                     >
                                     Add to cart
                                 </Button>
@@ -275,6 +306,11 @@ function Product() {
             <Backdrop className={classes.backdrop} open={refreshing} >
                 <CircularProgress color="inherit" />
             </Backdrop>
+            <Snackbar open={snack} autoHideDuration={3000} onClose={handleSnackClose}>
+                <Alert  severity={snackSeverity} onClose={handleSnackClose}>
+                {snackMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

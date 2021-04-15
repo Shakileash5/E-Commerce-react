@@ -29,6 +29,13 @@ import firebase from './firebase';
 import "firebase/auth";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -116,6 +123,16 @@ function Cart() {
     const [totalPrice,setTotalPrice] = React.useState(0);
     const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
+    const [snack,setSnack] = React.useState(0);
+    const [snackMessage,setSnackMessage] = React.useState("");
+    const [snackSeverity,setSnackSeverity] = React.useState("success")
+    const handleSnackClose = (event, reason) => {
+        if (reason === 'clickaway') {
+        return;
+        }
+        console.log("setSnack")
+        setSnack(0);
+    };
     const [chipData, setChipData] = React.useState([
         { key: 0, label: 'Angular' },
         { key: 1, label: 'jQuery' },
@@ -176,6 +193,20 @@ function Cart() {
             getSummary(tempData);
             //setViewData(tempData);
 
+        }
+    }
+
+    const placeOrder = ()=>()=>{
+        console.log("b")
+        try{
+            setSnack(1);
+            setSnackMessage("product added Successfully!");
+            setSnackSeverity("success");
+        }
+        catch(err){
+            setSnack(1);
+            setSnackMessage("Something went wront!");
+            setSnackSeverity("info");
         }
     }
 
@@ -290,15 +321,20 @@ function Cart() {
                     <Grid item style={{margin:10}}>
                         <Button
                                     variant="contained"
-                                    color="primary"
+                                    color="secondary"
                                     className={classes.button}
+                                    onClick={placeOrder()}
                                     >
-                                    Place Order
-                                </Button>
+                                    Place order
+                        </Button>
                     </Grid>
                 </Grid>
             </Grid>
-            
+            <Snackbar open={snack} autoHideDuration={6000} onClose={handleSnackClose}>
+                <Alert  severity={snackSeverity} onClose={handleSnackClose}>
+                {snackMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
     }
