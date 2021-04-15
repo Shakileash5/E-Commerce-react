@@ -34,7 +34,9 @@ import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
-
+import Backdrop from '@material-ui/core/Backdrop';
+import firebase from './firebase';
+import "firebase/auth";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -146,14 +148,19 @@ export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [isLoggedIn,setIsLogged] = React.useState(0);
+  const [error,setError] = React.useState(0);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [constructorHasRun,setConstructorHasRun] = React.useState(false);
   const [values, setValues] = React.useState({
     userName: '',
     password: '',
-    weight: '',
+    email: '',
     weightRange: '',
     showPassword: false,
   });
+  const [isLoading, setLoading] = React.useState(false);
   const [screen,setScreen] = React.useState(0);
+  const [uid,setUid] = React.useState('');
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -192,6 +199,71 @@ export default function PrimarySearchAppBar() {
     setOpen(false);
   };
 
+  const signInPress = ()=>()=>{
+    if(values.email!="" && values.password!=""){
+            setOpen(false);
+            setRefreshing(true);
+            firebase.auth().signInWithEmailAndPassword(values.email,values.password).then((response)=>{
+                const uid = response.user.uid;
+                console.log(uid,":: uid");
+                //navigation1.navigate('MyTabs',{userId:uid.toString()});
+                setUid(uid.toString());
+            }).catch(err =>{
+                console.log("err",err);
+                setError(1);
+            }).finally(()=>{
+                setRefreshing(false);
+                setOpen(false);
+            });
+        }
+        else{
+            setError(1);
+            setOpen(false);
+        }
+  }
+
+  const signupPress = ()=>()=>{
+        console.log("signUp")
+        if(values.userName!='' && values.password!=''){
+            setOpen(false);
+            setRefreshing(true);
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(values.email, values.password)
+                .then((response) => {
+                    const uid = response.user.uid;
+                    console.log("uid ::: ",uid);
+                    setUid(uid.toString());
+                   // navigation1.navigate("Login")
+                }).catch(err =>{
+                     console.log("err",err);
+                     setError(1);
+                     //setErrorMessage(err.message); 
+                }).finally(()=>{
+                    setRefreshing(false);
+                    setOpen(false);
+                });
+        }
+        else{
+            setError(1);
+            //setErrorMessage("Enter userName and password");
+            setOpen(false);
+        }
+    }
+  
+  const logOut = ()=>()=>{
+      //console.log("Logged out");
+      try{
+        firebase.auth().signOut();
+        console.log("logged Out")
+        setIsLogged(0);
+        setOpen(false);
+      }
+      catch(err){
+        console.log("Error",err)
+      }
+  }
+  
   const body = (
     <div style={modalStyle} className={classes.paper}>
     {
@@ -202,12 +274,12 @@ export default function PrimarySearchAppBar() {
           <Grid item>
           <FormControl className={clsx(classes.margin, classes.textField)}>
             
-            <InputLabel htmlFor="standard-adornment-uname">UserName</InputLabel>
+            <InputLabel htmlFor="standard-adornment-email">Email</InputLabel>
               <Input
-                id="standard-adornment-uname"
+                id="standard-adornment-email"
                 type={'text'}
-                value={values.userName}
-                onChange={handleChange('userName')}
+                value={values.email}
+                onChange={handleChange('email')}
               />
           </FormControl>
           </Grid>
@@ -240,6 +312,7 @@ export default function PrimarySearchAppBar() {
             color="primary"
             className={classes.button}
             style={{marginTop:10}}
+            onClick={signInPress()}
             >
             signIn
         </Button>
@@ -256,12 +329,12 @@ export default function PrimarySearchAppBar() {
           <Grid item>
           <FormControl className={clsx(classes.margin, classes.textField)}>
             
-            <InputLabel htmlFor="standard-adornment-uname">UserName</InputLabel>
+            <InputLabel htmlFor="standard-adornment-email">Email</InputLabel>
               <Input
-                id="standard-adornment-uname"
+                id="standard-adornment-email"
                 type={'text'}
-                value={values.userName}
-                onChange={handleChange('userName')}
+                value={values.email}
+                onChange={handleChange('email')}
               />
           </FormControl>
           </Grid>
@@ -294,6 +367,7 @@ export default function PrimarySearchAppBar() {
             color="primary"
             className={classes.button}
             style={{marginTop:10}}
+            onClick={signupPress()}
             >
             signUp
         </Button>
@@ -337,7 +411,7 @@ export default function PrimarySearchAppBar() {
     >
       {
         isLoggedIn?
-        <MenuItem onClick={handleMenuClose}>LogOut</MenuItem>
+        <MenuItem onClick={logOut()}>LogOut</MenuItem>
         :
         <MenuItem onClick={handleOpen}>SignIn</MenuItem>
       }
@@ -346,6 +420,25 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
+  const constructor = ()=>{
+        if(constructorHasRun){
+            return;
+        }
+        console.log("act like constructor");
+        //retrieveData();
+        setRefreshing(true);
+        firebase.auth().onAuthStateChanged(user =>{
+            //console.log(user,"pakalam pa");
+            if(user){
+                //navigation1.navigate('MyTabs',{userId:user.uid.toString()});
+                setUid(user.uid.toString());
+                setIsLogged(1)
+            }
+            setRefreshing(false);
+        })
+        setConstructorHasRun(true);
+    }
+    constructor();
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
@@ -451,6 +544,9 @@ export default function PrimarySearchAppBar() {
       >
         {body}
       </Modal>
+      <Backdrop className={classes.backdrop} open={refreshing} >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

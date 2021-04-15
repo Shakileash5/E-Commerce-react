@@ -15,7 +15,10 @@ import TagFacesIcon from '@material-ui/icons/TagFaces';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 import {Link, useLocation} from "react-router-dom";
-
+import firebase from './firebase';
+import "firebase/auth";
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const themeCustom = createMuiTheme({
   palette: {
@@ -103,6 +106,8 @@ function Product() {
      
     ]);
     var location = useLocation();
+    const [uid,setUid] = React.useState('');
+    const [refreshing, setRefreshing] = React.useState(false);
 
     const getMetaData = ()=>{
         console.log(location);
@@ -110,6 +115,18 @@ function Product() {
         setId(parseInt(splitData[splitData.length-1]));
         idTemp = parseInt(splitData[splitData.length-1]);
         console.log(id,splitData,parseInt(splitData[splitData.length-1]))
+    }
+
+    const checkStatus = ()=>()=>{
+        setRefreshing(true);
+        firebase.auth().onAuthStateChanged(user =>{
+            //console.log(user,"pakalam pa");
+            if(user){
+                //navigation1.navigate('MyTabs',{userId:user.uid.toString()});
+                setUid(user.uid.toString());
+            }
+            setRefreshing(false);
+        })
     }
 
     const constructor = ()=>{
@@ -252,6 +269,9 @@ function Product() {
                     </Grid>
                 </div>
             </div>
+            <Backdrop className={classes.backdrop} open={refreshing} >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     );
 }

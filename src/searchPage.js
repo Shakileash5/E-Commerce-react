@@ -21,6 +21,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import blue from '@material-ui/core/colors/blue';
 import { useHistory } from 'react-router';
+import firebase from './firebase';
+import "firebase/auth";
 
 const useStyles = makeStyles((theme) => ({
    root: {
