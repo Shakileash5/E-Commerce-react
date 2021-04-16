@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
     maxWidth: "100%",
     maxHeight: "100%",
-    zIndex:0
+    zIndex:0,
   },
   image: {
     width: 500,
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     height: 100,
     borderRadius:1,
     borderWidth:1,
-    margin:5,
+    marginLeft:5,
     zIndex:0
 
   },
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
-    borderRadius:1,
+    borderRadius:15,
     zIndex:0
   },
   root2: {
@@ -209,7 +209,8 @@ function Product() {
     constructor();
 
     return (
-        <div className="App">
+        <div className="App" style={{
+    backgroundColor:"#F1F3F4"}}>
             <PrimarySearchAppBar />
             <Paper component="ul" className={classes.root2}>
                 {chipData.map((data) => {
@@ -261,14 +262,14 @@ function Product() {
                                     </Paper>
                                 </Grid>
                             </Grid>
-                            <div className={classes.paper2}>
+                            <div className={classes.paper2} style={{height:"100%",}}>
                                     <ButtonBase  className={classes.image}>
                                         <img className={classes.img} id="mainImg" src={imgSrc} />
                                     </ButtonBase >
                             </div>
                         </Grid>
-                        <Grid item xs sm container alignItems="center">
-                            <Grid item xs container direction="column" spacing={2} alignItems="flex-start">
+                        <Grid item xs sm container alignItems="center" justifyContent="flex-start" >
+                            <Grid item xs container direction="column" spacing={2} alignItems="flex-start" style={{marginLeft:"-5%",backgroundColor:"white",padding:15,borderRadius:15}}>
                                 <Typography gutterBottom variant="h4">
                                     {data.name}
                                 </Typography>

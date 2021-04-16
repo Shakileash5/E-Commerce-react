@@ -26,6 +26,7 @@ const SampleCard = styled.div`
 const useStyles = makeStyles((theme) => ({
    root: {
     maxWidth: 345,
+    backgroundColor:"#F1F3F4"
   },
   details: {
     display: 'flex',
@@ -62,7 +63,8 @@ const SampleCards = React.memo(() =>
  function Cards(){
    
   return(
-    <div style={{padding:10,margin:5,borderRadius:5,borderWidth:1}} >
+    <div style={{padding:10,margin:5,borderRadius:5,borderWidth:1,
+    backgroundColor:"#F1F3F4"}} >
     <img
       src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg"
       alt="Second slide"
@@ -129,7 +131,8 @@ export const CategorySlider = () => {
     constructor();
   return(
   
-  <div style={{padding:10}}>
+  <div style={{padding:10,
+    backgroundColor:"#F1F3F4"}}>
           <Typography variant="h4" component="h3" align="left">
             Top Category
           </Typography>

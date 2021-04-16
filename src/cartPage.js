@@ -80,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "2px 2px 3px 2px #9E9E9E",
     padding:20,
     backgroundColor:"#F6F6F7",
+    backgroundColor:"#F1F3F4"
   },
   paper2: {
     margin: 'auto',
@@ -113,7 +114,8 @@ const useStyles = makeStyles((theme) => ({
       padding:20,
       borderRadius:10,
       margin:10,
-      backgroundColor:"white"}
+      backgroundColor:"white"
+    }
 }));
 
 function Cart() {
