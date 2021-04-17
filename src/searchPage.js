@@ -12,6 +12,9 @@ import firebase from './firebase';
 import "firebase/auth";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import FeaturedPlayListIcon from '@material-ui/icons/FeaturedPlayList';
+import CategoryIcon from '@material-ui/icons/Category';
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -70,6 +73,24 @@ function Search() {
         }
     };
 
+    const sortPrice = ()=>()=>{
+      let tempArr = data;
+      console.log(tempArr)
+      tempArr.sort(function(a,b){
+        if (a.price<b.price){
+          return -1
+        }
+        if(a.price>b.price){
+          return 1
+        }
+        else{
+          return 0
+        }
+      });
+      console.log(tempArr);
+      setViewData(tempArr);
+      setData(tempArr);
+    }
 
     const getData = ()=>{
       var products = {};
@@ -87,11 +108,12 @@ function Search() {
           let arr = [];
           products.result.map((data) => {
                 //console.log(key,products.result[key])
-                arr.push(data)
+                arr.push(data);
             })
         //setOptions(arr);
         setData(arr);
-        console.log(arr,"iy")
+        //setViewData(arr);
+        console.log(viewData,"iy")
         return arr;
         
         setRefreshing(false);
@@ -126,30 +148,43 @@ function Search() {
     constructor();
 
     return (
-        <div className="App" style={{height:"100%"}}>
+        <div className="App" style={{height:"100%",
+    backgroundColor:"#F1F3F4"}}>
             <PrimarySearchAppBar />
             
             <Paper component="ul" className={classes.root2}>
-                {chipData.map((data) => {
-                    let icon;
-
-                    if (data.label === 'React') {
-                    icon = <TagFacesIcon />;
-                    }
-
-                    return (
-                    <li key={data.key} >
+                  
+                    <li >
                         <Chip
-                        icon={icon}
-                        label={data.label}
-                        
+                        icon={<LocalAtmIcon />}
+                        label={"Price"}
+                        clickable
                         className={classes.chip}
                         variant="outlined"
                         color="primary"
                         />
                     </li>
-                    );
-                })}
+                    <li >
+                        <Chip
+                        icon={<FeaturedPlayListIcon />}
+                        label={"Sort"}
+                        clickable
+                        onClick={sortPrice()}
+                        className={classes.chip}
+                        variant="outlined"
+                        color="primary"
+                        />
+                    </li>
+                    <li >
+                        <Chip
+                        icon={<CategoryIcon />}
+                        label={"Category"}
+                        clickable
+                        className={classes.chip}
+                        variant="outlined"
+                        color="primary"
+                        />
+                    </li>
             </Paper>
             <div style={{justify:"center",alignSelf:"center",margin: 20}}>
             <Grid container spacing={1} direction="row">

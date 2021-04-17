@@ -37,7 +37,7 @@ function MiniCard({name,price,image}) {
     const classes = useStyles();
     return (
         <div className="App">
-            <Grid item xs>
+            <Grid item >
                 <Card className={classes.root}>
                     <CardActionArea>
                         <img
@@ -46,11 +46,12 @@ function MiniCard({name,price,image}) {
                         height="200"
                         image={image}
                         src={image}
+                        style={{padding:10}}
                         resizeMode="cover"
                         title="Contemplative Reptile"
                         />
                         <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
+                        <Typography gutterBottom variant="h5" component="h2" style={{padding:10}}>
                             {name}
                         </Typography>
                         </CardContent>

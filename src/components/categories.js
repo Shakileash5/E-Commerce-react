@@ -199,17 +199,17 @@ export const CategorySlider = () => {
               console.log(category)
               return(
                 <Grid container direction="row" style={{borderRadius:15,backgroundColor:"white",marginTop:20,marginBottom:20,}} alignItems="center" >
-          <Grid item xs justifyContent="center">
+          <Grid item xs={4} justifyContent="center">
             <Typography variant="h2" align="center" style={{margin:15}}>
               {category}
             </Typography>
           </Grid>
 
-          <Grid item >
+          <Grid item  >
             <Grid container direction="column" style={{padding:10,marginTop:10}} spacing={5}> 
               <Grid item container direction="row" onClick={navigateTo(dummyData[category][0].key)}>
                 <Grid item>
-                    <img style={{height:100,width:100}} resizeMode="cover" src={dummyData[category][0].img_1} />
+                    <img style={{height:100,width:150}} resizeMode="cover" src={dummyData[category][0].img_1} />
                 </Grid> 
                 <Grid item>
                     <Grid container direction="column" alignItems="flex-start" style={{width:250}}>
@@ -229,7 +229,7 @@ export const CategorySlider = () => {
               </Grid>
               <Grid item container direction="row" onClick={navigateTo(dummyData[category][1].key)}>
                 <Grid item>
-                    <img style={{height:100,width:100}} resizeMode="cover" src={dummyData[category][1].img_1} />
+                    <img style={{height:100,width:150}} resizeMode="cover" src={dummyData[category][1].img_1} />
                 </Grid> 
                 <Grid item>
                     <Grid container direction="column" alignItems="flex-start" style={{width:250}}>
@@ -254,7 +254,7 @@ export const CategorySlider = () => {
             <Grid container direction="column" style={{padding:10,marginTop:10}} spacing={5}> 
               <Grid item container direction="row" onClick={navigateTo(dummyData[category][2].key)}>
                 <Grid item>
-                    <img style={{height:100,width:100}} resizeMode="cover" src={dummyData[category][2].img_1} />
+                    <img style={{height:100,width:150}} resizeMode="cover" src={dummyData[category][2].img_1} />
                 </Grid> 
                 <Grid item>
                     <Grid container direction="column" alignItems="flex-start" style={{width:250}}>
@@ -274,7 +274,7 @@ export const CategorySlider = () => {
               </Grid>
               <Grid item container direction="row" onClick={navigateTo(dummyData[category][3].key)}>
                 <Grid item>
-                    <img style={{height:100,width:100}} resizeMode="cover" src={dummyData[category][3].img_1} />
+                    <img style={{height:100,width:150}} resizeMode="cover" src={dummyData[category][3].img_1} />
                 </Grid> 
                 <Grid item>
                     <Grid container direction="column" alignItems="flex-start" style={{width:250}}>
