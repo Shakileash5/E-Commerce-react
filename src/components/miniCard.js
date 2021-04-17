@@ -22,6 +22,7 @@ import blue from '@material-ui/core/colors/blue';
 const useStyles = makeStyles((theme) => ({
    root: {
     maxWidth: 345,
+    minHeight:500,
     margin:10
   },
   details: {
@@ -32,18 +33,20 @@ const useStyles = makeStyles((theme) => ({
  
 }));
 
-function MiniCard({name,price}) {
+function MiniCard({name,price,image}) {
     const classes = useStyles();
     return (
         <div className="App">
             <Grid item xs>
                 <Card className={classes.root}>
                     <CardActionArea>
-                        <CardMedia
+                        <img
                         component="img"
                         alt="Contemplative Reptile"
                         height="200"
-                        image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcc1K6-WPl6yl84xsY7rROhOMznnJ0FS9gew&usqp=CAU"
+                        image={image}
+                        src={image}
+                        resizeMode="cover"
                         title="Contemplative Reptile"
                         />
                         <CardContent>

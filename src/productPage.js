@@ -81,6 +81,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
+    borderRadius:5,
+    zIndex:0
+  },
+  img2: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
     borderRadius:15,
     zIndex:0
   },
@@ -100,8 +108,12 @@ function Product() {
     const classes = useStyles();
     const [urlArr,setUrlArr] = React.useState([]);
     const [data,setData] = React.useState({});
+    const [name,setName] = React.useState("");
+    const [price,setPrice] = React.useState(0);
+    const [inStock,setStock] = React.useState(0);
+    const [category,setCategory] = React.useState("");
     const [constructorFlag,setConstructorFlag] = React.useState(0);
-    const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
+    const [imgSrc,setImgSrc] = React.useState("");
     const [id,setId] = React.useState(-1);
     const [snack,setSnack] = React.useState(0);
     const [snackMessage,setSnackMessage] = React.useState("");
@@ -148,6 +160,35 @@ function Product() {
         })
     }
 
+    const getData = ()=>{
+      var product = {};
+      let splitData = location.pathname.split("/");
+      fetch("http://127.0.0.1:8000/getProduct/?id="+splitData[splitData.length-1]).then((response)=>{
+        console.log(response)
+        return response.json()
+      }).then((response)=>{
+        product = response;
+        console.log("products",product)
+        //setData(arr);
+        console.log(product.result,"iy")
+        //return arr;
+        let tempData = product.result
+        let arr = [tempData.img_1,tempData.img_2,tempData.img_3];
+        setName(tempData.name);
+        setCategory(tempData.category);
+        setPrice(tempData.price);
+        setStock(tempData.quantity);
+        setUrlArr(arr);
+        setImgSrc(tempData.img_2)
+        setRefreshing(false);
+      
+      }).catch(err=>{
+        console.log("something went wrong!",err);
+        return [];
+        setRefreshing(false);
+      });
+    }
+
     const constructor = ()=>{
         if(constructorFlag == 0){
 
@@ -170,13 +211,14 @@ function Product() {
             ]
             setConstructorFlag(1);
             getMetaData();
+            getData();
+            idTemp = 1;
             setData(tempData[idTemp]);
             console.log(idTemp,tempData,"data")
-            setImgSrc(tempData[idTemp].src1);
+            //setImgSrc(tempData[idTemp].src1);
             checkStatus();
             console.log(data,tempData)  
-            let arr = [tempData[idTemp].src1,tempData[idTemp].src2,tempData[idTemp].src3];
-            setUrlArr(arr)
+            
             //setViewData(tempData);
 
         }
@@ -264,31 +306,31 @@ function Product() {
                             </Grid>
                             <div className={classes.paper2} style={{height:"100%",}}>
                                     <ButtonBase  className={classes.image}>
-                                        <img className={classes.img} id="mainImg" src={imgSrc} />
+                                        <img className={classes.img2} id="mainImg" src={imgSrc} />
                                     </ButtonBase >
                             </div>
                         </Grid>
                         <Grid item xs sm container alignItems="center" justifyContent="flex-start" >
                             <Grid item xs container direction="column" spacing={2} alignItems="flex-start" style={{marginLeft:"-5%",backgroundColor:"white",padding:15,borderRadius:15}}>
                                 <Typography gutterBottom variant="h4">
-                                    {data.name}
+                                    {name}
                                 </Typography>
 
-                                <Chip label="Pipes" color="primary" />
+                                <Chip label={category} color="primary" />
 
                                 <Grid item container direction="row" spacing={2} alignItems="center">
                                     <Typography gutterBottom variant="subtitle1">
                                         Price:
                                     </Typography>
                                     <Typography gutterBottom variant="h6">
-                                        5600
+                                        {price}
                                     </Typography>
                                 </Grid>
                                 <Typography gutterBottom variant="subtitle1">
                                         Inclusive of all Taxes
                                 </Typography>
                                 <Typography gutterBottom variant="h6" style={{ color: green[500] }}>
-                                        <GolfCourseIcon />   In Stock
+                                        <GolfCourseIcon />   {inStock>10?"In Stock":inStock == 0?"Sold Out":"Hurry up,Only few left"}
                                 </Typography>
                                 <Button
                                     variant="contained"

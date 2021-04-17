@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 import TagFacesIcon from '@material-ui/icons/TagFaces';
+import {Link, useLocation} from "react-router-dom";
 import { useHistory } from 'react-router';
 import firebase from './firebase';
 import "firebase/auth";
@@ -48,6 +49,7 @@ function Search() {
     const history = useHistory();
     const [data,setData] = React.useState([]);
     const [viewData,setViewData] = React.useState([]);
+    var location = useLocation();
     const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [chipData, setChipData] = React.useState([
         { key: 0, label: 'Angular' },
@@ -61,12 +63,45 @@ function Search() {
     ]);
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const navigateTo = (flag)=>()=>{
+    const navigateToProduct = (flag)=>()=>{
         //history.push("/product");
         if( flag >=0){
             history.push("/product/"+flag);
         }
     };
+
+
+    const getData = ()=>{
+      var products = {};
+      let splitData = location.pathname.split("/");
+      let arr = [];
+      console.log(splitData,"keywords");
+      fetch("http://127.0.0.1:8000/getSearchResults/?keyword="+splitData[splitData.length-1]).then((response)=>{
+        console.log(response)
+        return response.json()
+      }).then((response)=>{
+        products = response;
+        console.log("products",products)
+        
+          //console.log(products.result,"products");
+          let arr = [];
+          products.result.map((data) => {
+                //console.log(key,products.result[key])
+                arr.push(data)
+            })
+        //setOptions(arr);
+        setData(arr);
+        console.log(arr,"iy")
+        return arr;
+        
+        setRefreshing(false);
+      
+      }).catch(err=>{
+        console.log("something went wrong!",err);
+        return [];
+        setRefreshing(false);
+      });
+    }
 
     const constructor = ()=>{
         if(constructorFlag == 0){
@@ -80,7 +115,9 @@ function Search() {
                 },
             ]
             setConstructorFlag(1);
-            setData(tempData);
+            let arr = getData();
+            console.log("whats happening",arr)
+            //setData(arr);
             setRefreshing(false);
             //setViewData(tempData);
 
@@ -118,9 +155,10 @@ function Search() {
             <Grid container spacing={1} direction="row">
               {
                 data.map((data,i)=>{
+                  console.log(data.img_1)
                   return(
-                    <div key={data.key} onClick={navigateTo(i)}>
-                        <MiniCard name={data.name} price ={data.Price} />
+                    <div key={data.key} onClick={navigateToProduct(data.key)}>
+                        <MiniCard name={data.name} price ={data.price} image={data.img_1} />
                     </div>
                   );
                 })

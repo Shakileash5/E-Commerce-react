@@ -1,4 +1,3 @@
-// *https://www.registers.service.gov.uk/registers/country/use-the-api*
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -16,13 +15,15 @@ export default function Asynchronous() {
   const history = useHistory();
   const [options, setOptions] = React.useState(["Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"]);
   const loading = open && options.length === 0;
-
+  const [calledOnce,setCall] = React.useState(0);
   const navigateTo = (flag)=>{
         //history.push("/product");
-        console.log("cebi")
-        history.push("/search");
-        if( flag){
+        console.log("cebi",flag)
+        //history.push("/search");
+        if( calledOnce==0 && flag){
+            setCall(1);
             history.push("/search/"+flag);
+
         }
     };
 
@@ -34,7 +35,7 @@ export default function Asynchronous() {
     }
 
     (async () => {
-      //const response = await fetch("http://127.0.0.1:8000/getAllProducts/");
+     //const response = await fetch("http://127.0.0.1:8000/getAllProducts/");
      //await sleep(1e3); // For demo purposes.
       //const countries = await response.json();
       var products = {};
@@ -56,13 +57,12 @@ export default function Asynchronous() {
             })
         setOptions(arr);
         console.log(arr,options)
-        
-
-      }
+        }
       }).catch(err=>{
         console.log("something went wrong!",err);
       })
       //active
+    
       
       
     })();
@@ -71,6 +71,16 @@ export default function Asynchronous() {
       active = false;
     };
   }, [loading]);
+
+  const keyPress = (e)=>{
+      if(e.keyCode == 13){
+         //console.log('value', e.target.value);
+          history.push("/search/"+e.target.value)
+         // put the login here
+      }
+     //navigateTo(e.target.value)
+      //
+   }
 
   React.useEffect(() => {
     if (!open) {
@@ -96,10 +106,12 @@ export default function Asynchronous() {
       onChange={(val)=>{console.log("fewbfui",val);}}
       renderInput={(params) => (
         <TextField
+          onKeyDown={(e)=>{keyPress(e)}}
            style={{border: '0px solid rgba(0, 0, 0, 0.05)'}}  
           {...params}
           label="Search"
           variant="outlined"
+          
           InputProps={{
             ...params.InputProps,
             endAdornment: (
