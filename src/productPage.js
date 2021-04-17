@@ -155,7 +155,7 @@ function Product() {
                 {
                     key:1, name: "Smart 12 Inch tv samsung", Price: 26900, 
                     src1:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8P-nx0FswkMiwW5wCA5hZcPG1H5kG57DAyg&usqp=CAU",
-                    src2:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHEGYXv30RbfDIllC4j7rrx6XeHFCcd_LPKQ&usqp=CAU",
+                    src2:"https://images-na.ssl-images-amazon.com/images/I/61UTlibhl%2BL._SY741_.jpg",
                     src3:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcc1K6-WPl6yl84xsY7rROhOMznnJ0FS9gew&usqp=CAU",
                     stock:1,category:"TV"
                 },

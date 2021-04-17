@@ -34,21 +34,37 @@ export default function Asynchronous() {
     }
 
     (async () => {
-      const response = await fetch("https://reqres.in/api/users?page=2");
-      await sleep(1e3); // For demo purposes.
-      const countries = await response.json();
-
-      if (active) {
-          console.log(countries);
+      //const response = await fetch("http://127.0.0.1:8000/getAllProducts/");
+     //await sleep(1e3); // For demo purposes.
+      //const countries = await response.json();
+      var products = {};
+      fetch("http://127.0.0.1:8000/getAllProducts/").then((response)=>{
+        console.log(response)
+        return response.json()
+      }).then((response)=>{
+        products = response;
+        console.log("products",products)
+        if (active) {
+          //console.log(products.result,"products");
           let arr = [];
-          countries.data.map((key) => {
-                arr.push({name:key.first_name})
+          Object.keys(products.result).map((key) => {
+                //console.log(key,products.result[key])
+                let temp = products.result[key].name.split(" ")
+                temp = temp.slice(0,5);
+                temp = temp.join(" ");
+                arr.push({name:temp})
             })
         setOptions(arr);
         console.log(arr,options)
         
 
       }
+      }).catch(err=>{
+        console.log("something went wrong!",err);
+      })
+      //active
+      
+      
     })();
 
     return () => {
