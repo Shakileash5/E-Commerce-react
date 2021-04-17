@@ -192,15 +192,15 @@ export const CategorySlider = () => {
           <Typography variant="h4" component="h3" align="left">
             Top Category
           </Typography>
-      <Grid container alignItems="flex-start" justifyContent="center" style={{margin:0}}>
-      <Grid item>
+      <Grid container alignItems="center" justifyContent="center" style={{margin:0, backgroundColor:""}}>
+      <Grid item xs container>
       {
         Object.keys(dummyData).map((category)=>{
               console.log(category)
               return(
-                <Grid container direction="row" style={{maxWidth:1100,borderRadius:15,backgroundColor:"white",marginTop:20,marginBottom:20,}} alignItems="center" >
-          <Grid item justifyContent="center">
-            <Typography variant="h5" align="center" style={{margin:15}}>
+                <Grid container direction="row" style={{borderRadius:15,backgroundColor:"white",marginTop:20,marginBottom:20,}} alignItems="center" >
+          <Grid item xs justifyContent="center">
+            <Typography variant="h2" align="center" style={{margin:15}}>
               {category}
             </Typography>
           </Grid>
