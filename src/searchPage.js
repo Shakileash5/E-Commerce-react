@@ -19,6 +19,11 @@ import Modal from '@material-ui/core/Modal';
 import MuiAlert from '@material-ui/lab/Alert';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 
 function rand() {
@@ -89,6 +94,9 @@ function Search() {
     const [data,setData] = React.useState([]);
     const [viewData,setViewData] = React.useState([]);
     const [minMaxValue, setMinMax] = React.useState([0, 10]);
+    const [category, setCategory] = React.useState('');
+    const [categoryModal,setCategoryModal] = React.useState(0);
+    const [categoryData,setCategoryData] = React.useState(["TV","FRIDGE"]);
     var maxPrice = -1;
     var minPrice = 1000000;
     const [modalStyle] = React.useState(getModalStyle);
@@ -133,6 +141,21 @@ function Search() {
         setData(arr)
     };
 
+    const handleCategoryChange = (event) => {
+      let arr = [];
+      let tempCategory = event.target.value;
+      viewData.map((value)=>{
+          //console.log(price,minMaxValue,price>=minMaxValue[0])
+          if(value.category.toLocaleLowerCase() == tempCategory.toLocaleLowerCase()){
+            arr.push(value)
+            //console.log("inside",value)
+          }
+        });
+      console.log(arr,"data ",viewData)
+      setData(arr)
+      setCategory(event.target.value);
+    };
+
     const body = (
         <div style={modalStyle} className={classes.paper}>
             <div style={{width:300}}>
@@ -152,6 +175,25 @@ function Search() {
         </div>
     );
 
+    const body2 = (
+         
+        <div style={modalStyle} className={classes.paper}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Category</FormLabel>
+            <RadioGroup aria-label="gender" name="gender1" value={category} onChange={handleCategoryChange}>
+              {
+                categoryData.map((val)=>{
+                  
+                        return(
+                            <FormControlLabel value={val} control={<Radio />} label={val} />
+                        )      
+                })
+              }
+          </RadioGroup>
+        </FormControl>
+        </div>  
+      
+    )
     const sortPrice = ()=>()=>{
       let tempArr = data;
       console.log(tempArr)
@@ -273,6 +315,7 @@ function Search() {
                         icon={<CategoryIcon />}
                         label={"Category"}
                         clickable
+                        onClick={()=>{setCategoryModal(1)}}
                         className={classes.chip}
                         variant="outlined"
                         color="primary"
@@ -305,6 +348,15 @@ function Search() {
               aria-describedby="simple-modal-description"
               >
               {body}
+            </Modal>
+            <Modal
+              open={categoryModal}
+              onClose={()=>{setCategoryModal(0);}}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+              >
+              {body2}
+              
             </Modal>
         </div>
     );
