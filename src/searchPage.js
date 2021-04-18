@@ -15,6 +15,34 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import FeaturedPlayListIcon from '@material-ui/icons/FeaturedPlayList';
 import CategoryIcon from '@material-ui/icons/Category';
+import Modal from '@material-ui/core/Modal';
+import MuiAlert from '@material-ui/lab/Alert';
+import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
+
+
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+function valuetext(value) {
+  return `${value}°C`;
+}
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -45,6 +73,14 @@ const useStyles = makeStyles((theme) => ({
   chip: {
     margin: theme.spacing(0.5),
   },
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    borderRadius:15,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
 }));
 
 function Search() {
@@ -52,8 +88,13 @@ function Search() {
     const history = useHistory();
     const [data,setData] = React.useState([]);
     const [viewData,setViewData] = React.useState([]);
+    const [minMaxValue, setMinMax] = React.useState([0, 10]);
+    var maxPrice = -1;
+    var minPrice = 1000000;
+    const [modalStyle] = React.useState(getModalStyle);
     var location = useLocation();
     const [constructorFlag,setConstructorFlag] = React.useState(0);
+    const [priceModal,setPriceModal] = React.useState(0);
     const [chipData, setChipData] = React.useState([
         { key: 0, label: 'Angular' },
         { key: 1, label: 'jQuery' },
@@ -72,6 +113,44 @@ function Search() {
             history.push("/product/"+flag);
         }
     };
+
+    const handleChange = (event, newValue) => {
+        let arr = [];
+        
+        viewData.map((value)=>{
+          
+          let price = value.price.split(",");
+          price = price.join("")
+          price = parseInt(price)
+          //console.log(price,minMaxValue,price>=minMaxValue[0])
+          if(price>=minMaxValue[0] & price<=minMaxValue[1]){
+            arr.push(value)
+            //console.log("inside",value)
+          }
+        });
+        console.log(arr,"data ",viewData)
+        setMinMax(newValue);
+        setData(arr)
+    };
+
+    const body = (
+        <div style={modalStyle} className={classes.paper}>
+            <div style={{width:300}}>
+              <Typography id="range-slider" gutterBottom>
+                Price range
+              </Typography>
+              <Slider
+                value={minMaxValue}
+                onChange={handleChange}
+                valueLabelDisplay="auto"
+                aria-labelledby="range-slider"
+                min = {0}
+                max = {100000}
+                getAriaValueText={valuetext}
+              />
+            </div>
+        </div>
+    );
 
     const sortPrice = ()=>()=>{
       let tempArr = data;
@@ -108,12 +187,25 @@ function Search() {
           let arr = [];
           products.result.map((data) => {
                 //console.log(key,products.result[key])
+                let price = data.price.split(",");
+                price = price.join("")
+                price = parseInt(price)
+                if(minPrice>price){
+
+                  minPrice = price;
+                  console.log(minPrice,price)
+                }
+                if(maxPrice<price){
+                  maxPrice = price;
+                  console.log(maxPrice,data.price,price)
+                }
+                setMinMax([minPrice,maxPrice]);
                 arr.push(data);
             })
         //setOptions(arr);
         setData(arr);
-        //setViewData(arr);
-        console.log(viewData,"iy")
+        setViewData(arr);
+        console.log(viewData,"iy",maxPrice,minPrice)
         return arr;
         
         setRefreshing(false);
@@ -159,6 +251,7 @@ function Search() {
                         icon={<LocalAtmIcon />}
                         label={"Price"}
                         clickable
+                        onClick={()=>{setPriceModal(1)}}
                         className={classes.chip}
                         variant="outlined"
                         color="primary"
@@ -205,6 +298,14 @@ function Search() {
             <Backdrop className={classes.backdrop} open={refreshing} >
               <CircularProgress color="inherit" />
             </Backdrop>
+            <Modal
+              open={priceModal}
+              onClose={()=>{setPriceModal(0);}}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+              >
+              {body}
+            </Modal>
         </div>
     );
     }
