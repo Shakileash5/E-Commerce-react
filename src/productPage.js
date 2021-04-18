@@ -108,6 +108,7 @@ function Product() {
     const classes = useStyles();
     const [urlArr,setUrlArr] = React.useState([]);
     const [data,setData] = React.useState({});
+    var dataVar = {};
     const [name,setName] = React.useState("");
     const [price,setPrice] = React.useState(0);
     const [inStock,setStock] = React.useState(0);
@@ -122,7 +123,7 @@ function Product() {
         if (reason === 'clickaway') {
         return;
         }
-        console.log("setSnack")
+        //console.log("setSnack")
         setSnack(0);
     };
     var idTemp = -1;
@@ -141,20 +142,22 @@ function Product() {
     const [refreshing, setRefreshing] = React.useState(false);
 
     const getMetaData = ()=>{
-        console.log(location);
+        //console.log(location);
         let splitData = location.pathname.split("/");
         setId(parseInt(splitData[splitData.length-1]));
         idTemp = parseInt(splitData[splitData.length-1]);
-        console.log(id,splitData,parseInt(splitData[splitData.length-1]))
+        //console.log(id,splitData,parseInt(splitData[splitData.length-1]))
     }
 
-    const checkStatus = ()=>()=>{
+    const checkStatus =()=>{
+        
         setRefreshing(true);
         firebase.auth().onAuthStateChanged(user =>{
             //console.log(user,"pakalam pa");
             if(user){
                 //navigation1.navigate('MyTabs',{userId:user.uid.toString()});
                 setUid(user.uid.toString());
+                
             }
             setRefreshing(false);
         })
@@ -164,15 +167,18 @@ function Product() {
       var product = {};
       let splitData = location.pathname.split("/");
       fetch("http://127.0.0.1:8000/getProduct/?id="+splitData[splitData.length-1]).then((response)=>{
-        console.log(response)
+        //console.log(response)
         return response.json()
       }).then((response)=>{
         product = response;
-        console.log("products",product)
+        //console.log("products",product)
         //setData(arr);
-        console.log(product.result,"iy")
+        //console.log(product.result,"iy")
         //return arr;
-        let tempData = product.result
+        let tempData = product.result;
+        tempData["key"] = splitData[splitData.length-1];
+        setData(tempData)
+        dataVar = tempData;
         let arr = [tempData.img_1,tempData.img_2,tempData.img_3];
         setName(tempData.name);
         setCategory(tempData.category);
@@ -181,7 +187,10 @@ function Product() {
         setUrlArr(arr);
         setImgSrc(tempData.img_2)
         setRefreshing(false);
-      
+        //console.log(tempData);
+        
+        setData(tempData);
+        return tempData;
       }).catch(err=>{
         console.log("something went wrong!",err);
         return [];
@@ -211,13 +220,14 @@ function Product() {
             ]
             setConstructorFlag(1);
             getMetaData();
-            getData();
+            let temp = getData();
             idTemp = 1;
-            setData(tempData[idTemp]);
-            console.log(idTemp,tempData,"data")
+            console.log("data",temp)
+            //setData(tempData[idTemp]);
+            //console.log(idTemp,tempData,"data")
             //setImgSrc(tempData[idTemp].src1);
             checkStatus();
-            console.log(data,tempData)  
+            //console.log(data,tempData)  
             
             //setViewData(tempData);
 
@@ -229,8 +239,17 @@ function Product() {
     };
 
     const addProduct = ()=>()=>{
-        console.log("add Product")
+        console.log("add Product",dataVar,data)
         try{
+            const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: data,userId:uid})
+                };
+            fetch('http://127.0.0.1:8000/addToCart/', requestOptions)
+            .then(response => response.json())
+            .then(data => console.log(data,"recieved"));
+
             setSnack(1);
             setSnackMessage("product added Successfully!");
             setSnackSeverity("success");
@@ -254,28 +273,6 @@ function Product() {
         <div className="App" style={{
     backgroundColor:"#F1F3F4"}}>
             <PrimarySearchAppBar />
-            <Paper component="ul" className={classes.root2}>
-                {chipData.map((data) => {
-                    let icon;
-
-                    if (data.label === 'React') {
-                    icon = <TagFacesIcon />;
-                    }
-
-                    return (
-                    <li key={data.key} >
-                        <Chip
-                        icon={icon}
-                        label={data.label}
-                        
-                        className={classes.chip}
-                        variant="outlined"
-                        color="primary"
-                        />
-                    </li>
-                    );
-                })}
-            </Paper>
             <div className={classes.root}>
                 <div className={classes.paper}>
                     <Grid container spacing={8}>

@@ -132,7 +132,7 @@ function Cart() {
         if (reason === 'clickaway') {
         return;
         }
-        console.log("setSnack")
+        //console.log("setSnack")
         setSnack(0);
     };
     const [chipData, setChipData] = React.useState([
@@ -149,6 +149,7 @@ function Cart() {
     const [data,setData] = React.useState([]);
     const [viewData,setViewData] = React.useState([]);
     const [uid,setUid] = React.useState('');
+    var userId = "";
     const [refreshing, setRefreshing] = React.useState(false);
 
     const getSummary = (datas)=>{
@@ -156,25 +157,57 @@ function Cart() {
         let price = 0;
         
         datas.forEach(element => {
-            price = price+element.Price;
-            console.log(price,element,element.Price)
+            //console.log(element.price)
+            let tempPrice = element.price;
+            //console.log(tempPrice)
+            tempPrice = parseInt(tempPrice)
+            price = price+tempPrice;
+            //console.log(price,element,element.price)
             quantity = quantity+1
         });
-        console.log(price)
+        //console.log(price)
         setTotalPrice(price);
         setTotalQuantity(quantity);
     }
 
-    const checkStatus = ()=>()=>{
+    const checkStatus = ()=>{
         setRefreshing(true);
         firebase.auth().onAuthStateChanged(user =>{
             //console.log(user,"pakalam pa");
             if(user){
                 //navigation1.navigate('MyTabs',{userId:user.uid.toString()});
                 setUid(user.uid.toString());
+                setUid(user.uid.toString());
+                userId = user.uid.toString();
+                //console.log(user.uid.toString(),"dfghj",uid,userId)
+                getData();
             }
             setRefreshing(false);
         })
+    }
+
+    const getData = ()=>{
+            
+            fetch("http://127.0.0.1:8000/getCart/?uid="+userId).then((response)=>{
+                //console.log(response)
+                return response.json()
+            }).then((response)=>{
+                let products = response.result;
+                console.log("products");
+                products.map((val)=>{
+                    if(typeof(val.price)=="string"){
+                        let tempP = val.price.split(",");
+                        tempP = parseInt(tempP.join(""))
+                        val.price = tempP;
+                    }
+                })
+                setData(products);
+                getSummary(products);
+            }).catch(err=>{
+                console.log("something went wrong!",err);
+            });
+
+
     }
 
     const constructor = ()=>{
@@ -188,18 +221,20 @@ function Cart() {
                     key:2, name: "Smart 12 Inch tv samsung", Price: 26900
                 },
             ]
-            console.log("working");
+            //console.log("working");
             setConstructorFlag(1);
-            checkStatus();
-            setData(tempData);
             getSummary(tempData);
+            checkStatus();
+            //setData(tempData);
+            
+            
             //setViewData(tempData);
 
         }
     }
 
     const placeOrder = ()=>()=>{
-        console.log("b")
+        //console.log("b")
         try{
             setSnack(1);
             setSnackMessage("product added Successfully!");
@@ -213,11 +248,30 @@ function Cart() {
     }
 
     const deleteData = (id)=>()=>{
-        console.log("deleted");
+        //console.log("deleted");
         let tempData = data.slice();
         tempData.splice(id,1);
         getSummary(tempData);
         setData(tempData);
+        try{
+            const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: tempData,userId:uid})
+                };
+            fetch('http://127.0.0.1:8000/addToCart/', requestOptions)
+            .then(response => response.json())
+            .then(data => console.log(data,"recieved"));
+
+            setSnack(1);
+            setSnackMessage("product added Successfully!");
+            setSnackSeverity("success");
+        }
+        catch(err){
+            setSnack(1);
+            setSnackMessage("Something went wront!");
+            setSnackSeverity("info");
+        }
     }
 
     const navigateTo = (flag)=>()=>{
@@ -226,7 +280,7 @@ function Cart() {
             history.push("/product/"+flag);
         }
 
-        console.log("clicked")
+        //console.log("clicked")
     };
 
 
@@ -240,44 +294,22 @@ function Cart() {
             <Backdrop className={classes.backdrop} open={refreshing} >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <Paper component="ul" className={classes.root2}>
-                {chipData.map((data) => {
-                    let icon;
-
-                    if (data.label === 'React') {
-                    icon = <TagFacesIcon />;
-                    }
-
-                    return (
-                    <li key={data.key} >
-                        <Chip
-                        icon={icon}
-                        label={data.label}
-                        key={data.key}
-                        className={classes.chip}
-                        variant="outlined"
-                        color="primary"
-                        />
-                    </li>
-                    );
-                })}
-            </Paper>
             <Typography align="left" variant="h4" style={{margin:20}}>
                 My Cart
             </ Typography>
             <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
-                <Grid item  alignItems="flex-start"  >
+                <Grid item  alignItems="flex-start" style={{width:700}} >
                     {   data.map((datas,i)=>{
                             return(
-                            <Grid key={i} item sm container >
+                            <Grid key={i} item sm container sty >
                                 <div  className={classes.items}>
                                     <Grid container spacing={5} >
                                         <div className={classes.paper2} onClick={navigateTo(i)}>
                                                     
-                                            <img className={classes.img} id="mainImg" src={imgSrc} />
+                                            <img className={classes.img} id="mainImg" src={datas.img_1} />
                                                     
                                         </div>
-                                        <Grid item xs sm container alignItems="flex-start">
+                                        <Grid item  sm container alignItems="flex-start">
                                             <Grid item xs container direction="column"  alignItems="flex-start">
                                                 <Typography gutterBottom variant="h6" align="left">
                                                     {datas.name}
@@ -290,7 +322,7 @@ function Cart() {
                                                         Price:
                                                     </Typography>
                                                     <Typography gutterBottom variant="h6">
-                                                        {datas.Price}
+                                                        {datas.price}
                                                     </Typography>
                                                     <IconButton color="secondary" aria-label="upload picture" component="span" onClick={deleteData(i)}>
                                                         <DeleteIcon />
