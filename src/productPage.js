@@ -171,10 +171,6 @@ function Product() {
         return response.json()
       }).then((response)=>{
         product = response;
-        //console.log("products",product)
-        //setData(arr);
-        //console.log(product.result,"iy")
-        //return arr;
         let tempData = product.result;
         tempData["key"] = splitData[splitData.length-1];
         setData(tempData)

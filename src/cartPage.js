@@ -127,7 +127,15 @@ function Cart() {
     const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
     const [snack,setSnack] = React.useState(0);
     const [snackMessage,setSnackMessage] = React.useState("");
-    const [snackSeverity,setSnackSeverity] = React.useState("success")
+    const [snackSeverity,setSnackSeverity] = React.useState("success");
+    const [data,setData] = React.useState([]);
+    const [viewData,setViewData] = React.useState([]);
+    const [orderData,setOrderData] = React.useState([]);
+    var orderRequests = [];
+    const [uid,setUid] = React.useState('');
+    var userId = "";
+    const [refreshing, setRefreshing] = React.useState(false);
+
     const handleSnackClose = (event, reason) => {
         if (reason === 'clickaway') {
         return;
@@ -135,23 +143,6 @@ function Cart() {
         //console.log("setSnack")
         setSnack(0);
     };
-    const [chipData, setChipData] = React.useState([
-        { key: 0, label: 'Angular' },
-        { key: 1, label: 'jQuery' },
-        { key: 2, label: 'Polymer' },
-        { key: 3, label: 'React' },
-        { key: 4, label: 'Vue.js' },
-        { key: 5, label: 'Angular' },
-        { key: 6, label: 'jQuery' },
-     
-    ]);
-
-    const [data,setData] = React.useState([]);
-    const [viewData,setViewData] = React.useState([]);
-    const [uid,setUid] = React.useState('');
-    var userId = "";
-    const [refreshing, setRefreshing] = React.useState(false);
-
     const getSummary = (datas)=>{
         let quantity = 0;
         let price = 0;
@@ -181,6 +172,7 @@ function Cart() {
                 userId = user.uid.toString();
                 //console.log(user.uid.toString(),"dfghj",uid,userId)
                 getData();
+                getOrders();
             }
             setRefreshing(false);
         })
@@ -193,14 +185,19 @@ function Cart() {
                 return response.json()
             }).then((response)=>{
                 let products = response.result;
-                console.log("products");
-                products.map((val)=>{
-                    if(typeof(val.price)=="string"){
-                        let tempP = val.price.split(",");
-                        tempP = parseInt(tempP.join(""))
-                        val.price = tempP;
-                    }
-                })
+                console.log("products",products);
+                if(products==null){
+                    products=[]
+                }
+                else{
+                    products.map((val)=>{
+                        if(typeof(val.price)=="string"){
+                            let tempP = val.price.split(",");
+                            tempP = parseInt(tempP.join(""))
+                            val.price = tempP;
+                        }
+                    });
+                }
                 setData(products);
                 getSummary(products);
             }).catch(err=>{
@@ -208,6 +205,58 @@ function Cart() {
             });
 
 
+    }
+
+
+    const getOrders = ()=>{
+        fetch("http://127.0.0.1:8000/getUserOrders/?uid="+userId).then((response)=>{
+                //console.log(response)
+                return response.json()
+            }).then((response)=>{
+                let orders = response.result;
+                console.log("orders",orders);
+                if(orderData==null){
+                    setOrderData([]);
+                    setOrderData([]);
+                }
+                else{
+                    setOrderData(orders);
+                    orderRequests = orders;
+                }
+                console.log(orderRequests,"ordredata")
+                
+            }).catch(err=>{
+                console.log("something went wrong!",err);
+            });
+    }   
+
+    const placeOrderDb = ()=>()=>{
+        try{
+            const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({userId:uid})
+                };
+            fetch('http://127.0.0.1:8000/orderProducts/', requestOptions)
+            .then(response => response.json())
+            .then((data) => {
+                console.log(data,"recieved")
+                let orders = data.result;
+                console.log(orders)
+                setOrderData(orders);
+                setData([]);
+                getSummary([]);
+                });
+
+            setSnack(1);
+            setSnackMessage("product Ordered Successfully!");
+            setSnackSeverity("success");
+        }
+        catch(err){
+            setSnack(1);
+            setSnackMessage("Something went wront!");
+            setSnackSeverity("info");
+        }
     }
 
     const constructor = ()=>{
@@ -236,6 +285,7 @@ function Cart() {
     const placeOrder = ()=>()=>{
         //console.log("b")
         try{
+            
             setSnack(1);
             setSnackMessage("product added Successfully!");
             setSnackSeverity("success");
@@ -283,10 +333,6 @@ function Cart() {
         //console.log("clicked")
     };
 
-
-    const handleDelete = (chipToDelete) => () => {
-        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-    };
     constructor();
     return (
         <div className="App" className={classes.root}>
@@ -301,7 +347,7 @@ function Cart() {
                 <Grid item  alignItems="flex-start" style={{width:700}} >
                     {   data.map((datas,i)=>{
                             return(
-                            <Grid key={i} item sm container sty >
+                            <Grid key={i} item sm container >
                                 <div  className={classes.items}>
                                     <Grid container spacing={5} >
                                         <div className={classes.paper2} onClick={navigateTo(i)}>
@@ -338,6 +384,9 @@ function Cart() {
                     }
             
                 </Grid>
+                
+                {   
+                data.length>=1?
                 <Grid item style={{backgroundColor:"white",borderRadius:10,margin:15,padding:10,width:400}}  >
                     <Typography align="left" variant="h5" style={{marginBottom:20}}>
                         Payment Details
@@ -357,14 +406,68 @@ function Cart() {
                                     variant="contained"
                                     color="secondary"
                                     className={classes.button}
-                                    onClick={placeOrder()}
+                                    onClick={placeOrderDb()}
                                     >
                                     Place order
                         </Button>
                     </Grid>
+                </Grid>:
+                <Typography align="left">
+                    No items
+                </Typography>
+                }
+                
+            </Grid>
+
+            <Typography align="left" variant="h4" style={{margin:20}}>
+                My Orders
+            </ Typography>
+            <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
+                <Grid item  alignItems="flex-start" style={{width:700}} >
+                    {   //console.log("update",orderRequests)
+                        orderData.map((datas,i)=>{
+                            console.log("update",orderData);
+                            return( 
+                            <Grid key={i} item sm container  >
+                                <div  className={classes.items}>
+                                    <Grid container spacing={5} >
+                                        <div className={classes.paper2} onClick={navigateTo(i)}>
+                                                    
+                                            <img className={classes.img} id="mainImg" src={datas.img_1} />
+                                                    
+                                        </div>
+                                        <Grid item  sm container alignItems="flex-start">
+                                            <Grid item xs container direction="column"  alignItems="flex-start">
+                                                <Typography gutterBottom variant="h6" align="left">
+                                                    {datas.name}
+                                                </Typography>
+
+                                                <Chip label="Pipes" color="primary" />
+
+                                                <Grid item container direction="row"  alignItems="center">
+                                                    <Typography gutterBottom variant="subtitle1">
+                                                        Price:
+                                                    </Typography>
+                                                    <Typography gutterBottom variant="h6">
+                                                        {datas.price}
+                                                    </Typography>
+                                                </Grid>
+                                                <Typography variant="body2">
+                                                    Status: 
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            </Grid>)
+                            } 
+                        )
+                        
+                    }
+            
                 </Grid>
             </Grid>
-            <Snackbar open={snack} autoHideDuration={6000} onClose={handleSnackClose}>
+            <Snackbar open={snack} autoHideDuration={2000} onClose={handleSnackClose}>
                 <Alert  severity={snackSeverity} onClose={handleSnackClose}>
                 {snackMessage}
                 </Alert>
