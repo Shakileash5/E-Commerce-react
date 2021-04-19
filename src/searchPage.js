@@ -154,7 +154,12 @@ function Search() {
       console.log(arr,"data ",viewData)
       setData(arr)
       setCategory(event.target.value);
-    };
+    };  
+
+    React.useEffect(() => {
+      console.log("useEffect",data)
+      setData(data);
+    }, [data])
 
     const body = (
         <div style={modalStyle} className={classes.paper}>
@@ -210,7 +215,9 @@ function Search() {
       });
       console.log(tempArr);
       setViewData(tempArr);
-      setData(tempArr);
+      //setData(tempArr);
+      setData(tempArr.slice(0));
+      console.log(data)
     }
 
     const getData = ()=>{
