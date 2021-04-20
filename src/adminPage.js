@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Cart() {
+function Admin() {
     const classes = useStyles();
     const history = useHistory();
     const [totalQuantity,setTotalQuantity] = React.useState(0);
@@ -176,7 +176,7 @@ function Cart() {
                 setUid(user.uid.toString());
                 userId = user.uid.toString();
                 //console.log(user.uid.toString(),"dfghj",uid,userId)
-                getData();
+                //getData();
                 getOrders();
             }
             setRefreshing(false);
@@ -215,8 +215,8 @@ function Cart() {
 
     const getOrders = ()=>{
         console.log(userId,"getOrders")
-        fetch("http://127.0.0.1:8000/getUserOrders/?uid="+userId).then((response)=>{
-                //console.log(response)
+        fetch("http://127.0.0.1:8000/getAllOrders/").then((response)=>{
+                console.log(response)
                 return response.json()
             }).then((response)=>{
                 let orders = response.result;
@@ -346,84 +346,7 @@ function Cart() {
             <Backdrop className={classes.backdrop} open={refreshing} >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <Typography align="left" variant="h4" style={{margin:20}}>
-                My Cart
-            </ Typography>
-            <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
-                <Grid item  alignItems="flex-start" style={{width:700}} >
-                    {   data.map((datas,i)=>{
-                            return(
-                            <Grid key={i} item sm container >
-                                <div  className={classes.items}>
-                                    <Grid container spacing={5} >
-                                        <div className={classes.paper2} onClick={navigateTo(i)}>
-                                                    
-                                            <img className={classes.img} id="mainImg" src={datas.img_1} />
-                                                    
-                                        </div>
-                                        <Grid item  sm container alignItems="flex-start">
-                                            <Grid item xs container direction="column"  alignItems="flex-start">
-                                                <Typography gutterBottom variant="h6" align="left">
-                                                    {datas.name}
-                                                </Typography>
-
-                                                <Chip label="Pipes" color="primary" />
-
-                                                <Grid item container direction="row"  alignItems="center">
-                                                    <Typography gutterBottom variant="subtitle1">
-                                                        Price:
-                                                    </Typography>
-                                                    <Typography gutterBottom variant="h6">
-                                                        {datas.price}
-                                                    </Typography>
-                                                    <IconButton color="secondary" aria-label="upload picture" component="span" onClick={deleteData(i)}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </div>
-                            </Grid>)
-                            } 
-                        )     
-                    }
             
-                </Grid>
-                
-                {   
-                data.length>=1?
-                <Grid item style={{backgroundColor:"white",borderRadius:10,margin:15,padding:10,width:400}}  >
-                    <Typography align="left" variant="h5" style={{marginBottom:20}}>
-                        Payment Details
-                    </Typography>
-                    <Grid item>
-                        <Typography align="left" variant="body1">
-                            Total Items : {totalQuantity}
-                        </Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography align="left" variant="body1">
-                            Total Amount : {totalPrice}
-                        </Typography>
-                    </Grid>
-                    <Grid item style={{margin:10}}>
-                        <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    className={classes.button}
-                                    onClick={placeOrderDb()}
-                                    >
-                                    Place order
-                        </Button>
-                    </Grid>
-                </Grid>:
-                <Typography align="left">
-                    No items
-                </Typography>
-                }
-                
-            </Grid>
 
             <Typography align="left" variant="h4" style={{margin:20}}>
                 My Orders
@@ -495,4 +418,4 @@ function Cart() {
     );
     }
 
-export default Cart;
+export default Admin;

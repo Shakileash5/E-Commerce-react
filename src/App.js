@@ -4,6 +4,7 @@ import Home from "./homePage";
 import Product from "./productPage";
 import Search from "./searchPage";
 import Cart from "./cartPage";
+import Admin from "./adminPage";
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 
@@ -16,6 +17,7 @@ function App() {
             <Route exact={true} path="/product/:id" component={Product} />
             <Route exact={true} path="/search/:keyword" component={Search} />
             <Route exact={true} path="/cart" component={Cart} />
+            <Route exact={true} path="/admin" component={Admin} />
           </Switch>
      </BrowserRouter>
     </div>
