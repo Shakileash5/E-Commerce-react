@@ -135,6 +135,11 @@ function Cart() {
     const [uid,setUid] = React.useState('');
     var userId = "";
     const [refreshing, setRefreshing] = React.useState(false);
+    const orderStatus = {
+        0:["Waiting","orange"],
+        1:["Accepted","green"],
+        2:["Rejected","red"]
+    }
 
     const handleSnackClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -209,6 +214,7 @@ function Cart() {
 
 
     const getOrders = ()=>{
+        console.log(userId,"getOrders")
         fetch("http://127.0.0.1:8000/getUserOrders/?uid="+userId).then((response)=>{
                 //console.log(response)
                 return response.json()
@@ -270,7 +276,7 @@ function Cart() {
                     key:2, name: "Smart 12 Inch tv samsung", Price: 26900
                 },
             ]
-            //console.log("working");
+            console.log("working");
             setConstructorFlag(1);
             getSummary(tempData);
             checkStatus();
@@ -425,6 +431,7 @@ function Cart() {
             <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
                 <Grid item  alignItems="flex-start" style={{width:700}} >
                     {   //console.log("update",orderRequests)
+                        orderData!=null?
                         orderData.map((datas,i)=>{
                             console.log("update",orderData);
                             return( 
@@ -452,16 +459,28 @@ function Cart() {
                                                         {datas.price}
                                                     </Typography>
                                                 </Grid>
-                                                <Typography variant="body2">
-                                                    Status: 
-                                                </Typography>
+                                                <Grid container direction="row">
+                                                    <Grid item>
+                                                        <p >
+                                                            Status:  
+                                                        </p>
+                                                    </Grid>
+                                                    <Grid item style={{backgroundColor:orderStatus[datas.status][1],borderRadius:5,height:25,margin:5,paddingLeft:6,paddingRight:6}}>
+                                                        <p style={{color:"white"}}>
+                                                           {orderStatus[datas.status][0]}
+                                                        </p>
+                                                    </Grid>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                 </div>
-                            </Grid>)
+                            </Grid>) 
                             } 
-                        )
+                        ):
+                            <Typography align="left">
+                                No Orders
+                            </Typography>
                         
                     }
             

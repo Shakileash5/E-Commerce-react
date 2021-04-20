@@ -171,6 +171,7 @@ export default function PrimarySearchAppBar() {
     userName: '',
     password: '',
     email: '',
+    phoneNo:'',
     weightRange: '',
     showPassword: false,
   });
@@ -248,7 +249,7 @@ export default function PrimarySearchAppBar() {
 
   const signupPress = ()=>()=>{
         console.log("signUp")
-        if(values.userName!='' && values.password!=''){
+        if(values.phoneNo!='' && values.email!='' && values.password!=''){
             setOpen(false);
             setRefreshing(true);
             firebase
@@ -258,6 +259,25 @@ export default function PrimarySearchAppBar() {
                     const uid = response.user.uid;
                     console.log("uid ::: ",uid);
                     setUid(uid.toString());
+                    const requestOptions = {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({userId:uid,email:values.email,phoneNo:values.phoneNo})
+                      };
+                    fetch('http://127.0.0.1:8000/addDetails/', requestOptions)
+                    .then(response => response.json())
+                    .then((data) => {
+                        console.log(data,"recieved")
+                        let orders = data.result;
+                        //console.log(orders)
+                        //setOrderData(orders);
+                        //setData([]);
+                        //getSummary([]);
+                        }).catch((err)=>{
+                          setSnack(1);
+                          setSnackMessage("Signed up UnSuccessfully");
+                          setSnackSeverity("error");
+                        })
                     setSnack(1);
                     setSnackMessage("Signed up successfully");
                     setSnackSeverity("success");
@@ -370,6 +390,18 @@ export default function PrimarySearchAppBar() {
                 type={'text'}
                 value={values.email}
                 onChange={handleChange('email')}
+              />
+          </FormControl>
+          </Grid>
+          <Grid item>
+          <FormControl className={clsx(classes.margin, classes.textField)}>
+            
+            <InputLabel htmlFor="standard-adornment-phoneNo">PhoneNo</InputLabel>
+              <Input
+                id="standard-adornment-phoneNo"
+                type={'text'}
+                value={values.phoneNo}
+                onChange={handleChange('phoneNo')}
               />
           </FormControl>
           </Grid>
