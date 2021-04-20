@@ -1,29 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import PrimarySearchAppBar from './appBar';
-import MiniCard from "./components/miniCard";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-import GolfCourseIcon from '@material-ui/icons/GolfCourse';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { green } from '@material-ui/core/colors';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
-import blue from '@material-ui/core/colors/blue';
 import { useHistory } from 'react-router';
 import firebase from './firebase';
 import "firebase/auth";
@@ -33,6 +15,9 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -81,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:15,
     boxShadow: "2px 2px 3px 2px #9E9E9E",
     padding:20,
-    backgroundColor:"#F6F6F7",
     backgroundColor:"#F1F3F4"
   },
   paper2: {
@@ -123,50 +107,32 @@ const useStyles = makeStyles((theme) => ({
 function Admin() {
     const classes = useStyles();
     const history = useHistory();
-    const [totalQuantity,setTotalQuantity] = React.useState(0);
-    const [totalPrice,setTotalPrice] = React.useState(0);
     const [constructorFlag,setConstructorFlag] = React.useState(0);
-    const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
-    const [snack,setSnack] = React.useState(0);
+    const [snack,setSnack] = React.useState(false);
     const [snackMessage,setSnackMessage] = React.useState("");
     const [snackSeverity,setSnackSeverity] = React.useState("success");
     const [data,setData] = React.useState([]);
-    const [viewData,setViewData] = React.useState([]);
     const [orderData,setOrderData] = React.useState([]);
-    var orderRequests = [];
     const [uid,setUid] = React.useState('');
+    var todoOrder = [];
     var userId = "";
     const [refreshing, setRefreshing] = React.useState(false);
-    const orderStatus = {
-        0:["Waiting","orange"],
-        1:["Accepted","green"],
-        2:["Rejected","red"]
-    }
+    const [state, setState] = React.useState({
+        orders: true,
+        accepted: false,
+    });
+
+    const handleChange = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+    };
 
     const handleSnackClose = (event, reason) => {
         if (reason === 'clickaway') {
         return;
         }
         //console.log("setSnack")
-        setSnack(0);
+        setSnack(false);
     };
-    const getSummary = (datas)=>{
-        let quantity = 0;
-        let price = 0;
-        
-        datas.forEach(element => {
-            //console.log(element.price)
-            let tempPrice = element.price;
-            //console.log(tempPrice)
-            tempPrice = parseInt(tempPrice)
-            price = price+tempPrice;
-            //console.log(price,element,element.price)
-            quantity = quantity+1
-        });
-        //console.log(price)
-        setTotalPrice(price);
-        setTotalQuantity(quantity);
-    }
 
     const checkStatus = ()=>{
         setRefreshing(true);
@@ -178,7 +144,7 @@ function Admin() {
                 setUid(user.uid.toString());
                 userId = user.uid.toString();
                 //console.log(user.uid.toString(),"dfghj",uid,userId)
-                //getData();
+                //
                 fetch("http://127.0.0.1:8000/isAdmin/?id="+userId).then((response)=>{
                 //console.log(response)
                 return response.json()
@@ -189,6 +155,7 @@ function Admin() {
                 });
 
                 getOrders();
+                getData();
             }
             setRefreshing(false);
         })
@@ -196,28 +163,21 @@ function Admin() {
 
     const getData = ()=>{
             
-            fetch("http://127.0.0.1:8000/getCart/?uid="+userId).then((response)=>{
-                //console.log(response)
+            fetch("http://127.0.0.1:8000/getAcceptedData/").then((response)=>{
                 return response.json()
             }).then((response)=>{
-                let products = response.result;
-                console.log("products",products);
-                if(products==null){
-                    products=[]
+                console.log(response)
+                let acceptData = response.result;
+                if(response.status!=200){
+                    acceptData = []
                 }
-                else{
-                    products.map((val)=>{
-                        if(typeof(val.price)=="string"){
-                            let tempP = val.price.split(",");
-                            tempP = parseInt(tempP.join(""))
-                            val.price = tempP;
-                        }
-                    });
-                }
-                setData(products);
+                todoOrder = acceptData.slice(0);
+                console.log(todoOrder,"acceptedData",acceptData)
             }).catch(err=>{
                 console.log("something went wrong!",err);
-            });
+            }).finally(()=>{
+                console.log(todoOrder,"acceptedData")
+            })
 
 
     }
@@ -237,9 +197,7 @@ function Admin() {
                 }
                 else{
                     setOrderData(orders);
-                    orderRequests = orders;
                 }
-                console.log(orderRequests,"ordredata")
                 
             }).catch(err=>{
                 console.log("something went wrong!",err);
@@ -264,13 +222,13 @@ function Admin() {
                 }
 
             }).finally(()=>{
-                setSnack(1);
+                setSnack(true);
                 setSnackMessage("product accepted Successfully!");
                 setSnackSeverity("success");
             })            
         }
         catch(err){
-            setSnack(1);
+            setSnack(true);
             setSnackMessage("Something went wront!");
             setSnackSeverity("info");
         }
@@ -294,13 +252,13 @@ function Admin() {
                 }
 
             }).finally(()=>{
-                setSnack(1);
+                setSnack(true);
                 setSnackMessage("product Rejected Successfully!");
                 setSnackSeverity("warning");
             })            
         }
         catch(err){
-            setSnack(1);
+            setSnack(true);
             setSnackMessage("Something went wront!");
             setSnackSeverity("info");
         }
@@ -309,14 +267,6 @@ function Admin() {
     const constructor = ()=>{
         if(constructorFlag == 0){
 
-            let tempData = [
-                {
-                    key:1, name: "Smart 12 Inch tv samsung", Price: 26900
-                },
-                {
-                    key:2, name: "Smart 12 Inch tv samsung", Price: 26900
-                },
-            ]
             console.log("working");
             setConstructorFlag(1);
             checkStatus();
@@ -345,13 +295,109 @@ function Admin() {
                 <CircularProgress color="inherit" />
             </Backdrop>
             
+            <FormGroup style={{margin:25}}>
+                <FormControlLabel
+                    control={
+                    <Switch
+                        checked={state.accepted}
+                        onChange={handleChange}
+                        name="accepted"
+                        color="primary"
+                    />
+                    }
+                    label="See accepted orders"
+                />
+            </FormGroup>
+
+            {
+                state.accepted==true?
+                <div>  
+                    <Typography align="left" variant="h4" style={{margin:20}}>
+                        Accepted Orders
+                    </ Typography>
+                    <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
+                        <Grid item  alignItems="flex-start" style={{width:700}} >
+                            {   
+                                todoOrder==[]?
+                                todoOrder.map((datas,i)=>{
+                                    
+                                    return( 
+                                    <Grid key={i} item sm container  >
+                                        <div  className={classes.items}>
+                                            <Grid container spacing={5} >
+                                                <div className={classes.paper2} onClick={navigateTo(datas.key)}>
+                                                            
+                                                    <img className={classes.img} id="mainImg" src={datas.img_1} />
+                                                            
+                                                </div>
+                                                <Grid item  sm container alignItems="flex-start">
+                                                    <Grid item xs container direction="column"  alignItems="flex-start">
+                                                        <Typography gutterBottom variant="h6" align="left">
+                                                            {datas.name}
+                                                        </Typography>
+
+                                                        <Chip label="Pipes" color="primary" />
+
+                                                        <Grid item container direction="row"  alignItems="center">
+                                                            <Typography gutterBottom variant="subtitle1">
+                                                                Price:
+                                                            </Typography>
+                                                            <Typography gutterBottom variant="h6">
+                                                                {datas.price}
+                                                            </Typography>
+                                                        </Grid>
+                                                        <Grid container direction="row" spacing={2}>
+                                                            <Grid item>
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="secondary"
+                                                                    className={classes.button}
+                                                                    startIcon={<ClearIcon />}
+                                                                    onClick={rejectData(i)}
+                                                                    >
+                                                                    Reject
+                                                                </Button>
+                                                            </Grid>
+                                                            <Grid item>
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    className={classes.button}
+                                                                    startIcon={<CheckIcon />}
+                                                                    onClick={acceptData(i)}
+                                                                    >
+                                                                    Accept
+                                                                </Button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </div>
+                                    </Grid>) 
+                                    } 
+                                ):
+                                    <Typography align="left">
+                                        No Orders{todoOrder}
+                                    </Typography>
+                                
+                            }
+                    
+                        </Grid>
+                    </Grid>
+                </div>:
+                null
+            }
+
+
+
 
             <Typography align="left" variant="h4" style={{margin:20}}>
-                My Orders
+                My Orders 
             </ Typography>
             <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
                 <Grid item  alignItems="flex-start" style={{width:700}} >
-                    {   //console.log("update",orderRequests)
+                    { 
                         orderData!=null?
                         orderData.map((datas,i)=>{
                             console.log("update",orderData);

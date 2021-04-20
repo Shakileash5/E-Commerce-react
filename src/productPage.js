@@ -116,7 +116,7 @@ function Product() {
     const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [imgSrc,setImgSrc] = React.useState("");
     const [id,setId] = React.useState(-1);
-    const [snack,setSnack] = React.useState(0);
+    const [snack,setSnack] = React.useState(false);
     const [snackMessage,setSnackMessage] = React.useState("");
     const [snackSeverity,setSnackSeverity] = React.useState("success")
     const handleSnackClose = (event, reason) => {
@@ -124,7 +124,7 @@ function Product() {
         return;
         }
         //console.log("setSnack")
-        setSnack(0);
+        setSnack(false);
     };
     var idTemp = -1;
     var location = useLocation();
@@ -233,7 +233,7 @@ function Product() {
             .then(response => response.json())
             .then(data => console.log(data,"recieved"))
             .finally(()=>{
-                setSnack(1);
+                setSnack(true);
                 setSnackMessage("product added Successfully!");
                 setSnackSeverity("success");
             })
@@ -241,7 +241,7 @@ function Product() {
             
         }
         catch(err){
-            setSnack(1);
+            setSnack(true);
             setSnackMessage("Something went wront!");
             setSnackSeverity("info");
         }

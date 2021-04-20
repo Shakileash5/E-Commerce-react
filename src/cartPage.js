@@ -125,7 +125,7 @@ function Cart() {
     const [totalPrice,setTotalPrice] = React.useState(0);
     const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
-    const [snack,setSnack] = React.useState(0);
+    const [snack,setSnack] = React.useState(false);
     const [snackMessage,setSnackMessage] = React.useState("");
     const [snackSeverity,setSnackSeverity] = React.useState("success");
     const [data,setData] = React.useState([]);
@@ -146,7 +146,7 @@ function Cart() {
         return;
         }
         //console.log("setSnack")
-        setSnack(0);
+        setSnack(false);
     };
     const getSummary = (datas)=>{
         let quantity = 0;
@@ -253,7 +253,7 @@ function Cart() {
                 setData([]);
                 getSummary([]);
                 }).finally(()=>{
-                    setSnack(1);
+                    setSnack(true);
                     setSnackMessage("product Ordered Successfully!");
                     setSnackSeverity("success");
                 })
@@ -261,7 +261,7 @@ function Cart() {
             
         }
         catch(err){
-            setSnack(1);
+            setSnack(true);
             setSnackMessage("Something went wront!");
             setSnackSeverity("info");
         }
@@ -301,14 +301,14 @@ function Cart() {
             .then(response => response.json())
             .then(data => console.log(data,"recieved"))
             .finally(()=>{
-                setSnack(1);
+                setSnack(true);
                 setSnackMessage("product deleted Successfully!");
                 setSnackSeverity("warning");
             })
 
         }
         catch(err){
-            setSnack(1);
+            setSnack(true);
             setSnackMessage("Something went wront!");
             setSnackSeverity("info");
         }

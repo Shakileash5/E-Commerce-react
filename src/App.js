@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Home from "./homePage";
 import Product from "./productPage";
@@ -6,7 +5,6 @@ import Search from "./searchPage";
 import Cart from "./cartPage";
 import Admin from "./adminPage";
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Typography from '@material-ui/core/Typography';
 
 function App() {
   return (
