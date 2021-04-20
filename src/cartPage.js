@@ -252,11 +252,13 @@ function Cart() {
                 setOrderData(orders);
                 setData([]);
                 getSummary([]);
-                });
+                }).finally(()=>{
+                    setSnack(1);
+                    setSnackMessage("product Ordered Successfully!");
+                    setSnackSeverity("success");
+                })
 
-            setSnack(1);
-            setSnackMessage("product Ordered Successfully!");
-            setSnackSeverity("success");
+            
         }
         catch(err){
             setSnack(1);
@@ -280,26 +282,6 @@ function Cart() {
             setConstructorFlag(1);
             getSummary(tempData);
             checkStatus();
-            //setData(tempData);
-            
-            
-            //setViewData(tempData);
-
-        }
-    }
-
-    const placeOrder = ()=>()=>{
-        //console.log("b")
-        try{
-            
-            setSnack(1);
-            setSnackMessage("product added Successfully!");
-            setSnackSeverity("success");
-        }
-        catch(err){
-            setSnack(1);
-            setSnackMessage("Something went wront!");
-            setSnackSeverity("info");
         }
     }
 
@@ -317,11 +299,13 @@ function Cart() {
                 };
             fetch('http://127.0.0.1:8000/addToCart/', requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data,"recieved"));
+            .then(data => console.log(data,"recieved"))
+            .finally(()=>{
+                setSnack(1);
+                setSnackMessage("product deleted Successfully!");
+                setSnackSeverity("warning");
+            })
 
-            setSnack(1);
-            setSnackMessage("product added Successfully!");
-            setSnackSeverity("success");
         }
         catch(err){
             setSnack(1);

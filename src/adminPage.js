@@ -257,14 +257,17 @@ function Admin() {
             .then(response => response.json())
             .then((data) => {
                 console.log(data,"recieved")
-                let orders = data.result[1];
-                console.log(orders)
-                setOrderData(orders);
-                });
+                if(data.status == 200){
+                    let orders = data.result[1];
+                    console.log(orders)
+                    setOrderData(orders);
+                }
 
-            setSnack(1);
-            setSnackMessage("product accepted Successfully!");
-            setSnackSeverity("success");
+            }).finally(()=>{
+                setSnack(1);
+                setSnackMessage("product accepted Successfully!");
+                setSnackSeverity("success");
+            })            
         }
         catch(err){
             setSnack(1);
@@ -294,22 +297,6 @@ function Admin() {
 
         }
     }
-
-    const placeOrder = ()=>()=>{
-        //console.log("b")
-        try{
-            
-            setSnack(1);
-            setSnackMessage("product added Successfully!");
-            setSnackSeverity("success");
-        }
-        catch(err){
-            setSnack(1);
-            setSnackMessage("Something went wront!");
-            setSnackSeverity("info");
-        }
-    }
-
 
     const navigateTo = (flag)=>()=>{
         //history.push("/product");
