@@ -27,6 +27,8 @@ import blue from '@material-ui/core/colors/blue';
 import { useHistory } from 'react-router';
 import firebase from './firebase';
 import "firebase/auth";
+import CheckIcon from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -177,6 +179,15 @@ function Admin() {
                 userId = user.uid.toString();
                 //console.log(user.uid.toString(),"dfghj",uid,userId)
                 //getData();
+                fetch("http://127.0.0.1:8000/isAdmin/?id="+userId).then((response)=>{
+                //console.log(response)
+                return response.json()
+                }).then((response)=>{
+                    if(response.result==false){
+                        history.push("/");
+                    }
+                });
+
                 getOrders();
             }
             setRefreshing(false);
@@ -204,7 +215,6 @@ function Admin() {
                     });
                 }
                 setData(products);
-                getSummary(products);
             }).catch(err=>{
                 console.log("something went wrong!",err);
             });
@@ -236,26 +246,24 @@ function Admin() {
             });
     }   
 
-    const placeOrderDb = ()=>()=>{
+    const acceptData = (idx)=>()=>{
         try{
             const requestOptions = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({userId:uid})
+                    body: JSON.stringify({userId:uid,acceptData:orderData[idx]})
                 };
-            fetch('http://127.0.0.1:8000/orderProducts/', requestOptions)
+            fetch('http://127.0.0.1:8000/acceptOrder/', requestOptions)
             .then(response => response.json())
             .then((data) => {
                 console.log(data,"recieved")
-                let orders = data.result;
+                let orders = data.result[1];
                 console.log(orders)
                 setOrderData(orders);
-                setData([]);
-                getSummary([]);
                 });
 
             setSnack(1);
-            setSnackMessage("product Ordered Successfully!");
+            setSnackMessage("product accepted Successfully!");
             setSnackSeverity("success");
         }
         catch(err){
@@ -278,7 +286,6 @@ function Admin() {
             ]
             console.log("working");
             setConstructorFlag(1);
-            getSummary(tempData);
             checkStatus();
             //setData(tempData);
             
@@ -303,32 +310,6 @@ function Admin() {
         }
     }
 
-    const deleteData = (id)=>()=>{
-        //console.log("deleted");
-        let tempData = data.slice();
-        tempData.splice(id,1);
-        getSummary(tempData);
-        setData(tempData);
-        try{
-            const requestOptions = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: tempData,userId:uid})
-                };
-            fetch('http://127.0.0.1:8000/addToCart/', requestOptions)
-            .then(response => response.json())
-            .then(data => console.log(data,"recieved"));
-
-            setSnack(1);
-            setSnackMessage("product added Successfully!");
-            setSnackSeverity("success");
-        }
-        catch(err){
-            setSnack(1);
-            setSnackMessage("Something went wront!");
-            setSnackSeverity("info");
-        }
-    }
 
     const navigateTo = (flag)=>()=>{
         //history.push("/product");
@@ -382,16 +363,27 @@ function Admin() {
                                                         {datas.price}
                                                     </Typography>
                                                 </Grid>
-                                                <Grid container direction="row">
+                                                <Grid container direction="row" spacing={2}>
                                                     <Grid item>
-                                                        <p >
-                                                            Status:  
-                                                        </p>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            className={classes.button}
+                                                            startIcon={<ClearIcon />}
+                                                            >
+                                                            Reject
+                                                        </Button>
                                                     </Grid>
-                                                    <Grid item style={{backgroundColor:orderStatus[datas.status][1],borderRadius:5,height:25,margin:5,paddingLeft:6,paddingRight:6}}>
-                                                        <p style={{color:"white"}}>
-                                                           {orderStatus[datas.status][0]}
-                                                        </p>
+                                                    <Grid item>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            className={classes.button}
+                                                            startIcon={<CheckIcon />}
+                                                            onClick={acceptData(i)}
+                                                            >
+                                                            Accept
+                                                        </Button>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>

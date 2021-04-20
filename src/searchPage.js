@@ -96,23 +96,13 @@ function Search() {
     const [minMaxValue, setMinMax] = React.useState([0, 10]);
     const [category, setCategory] = React.useState('');
     const [categoryModal,setCategoryModal] = React.useState(0);
-    const [categoryData,setCategoryData] = React.useState(["TV","FRIDGE"]);
+    const [categoryData,setCategoryData] = React.useState(["TV","FRIDGE","WATCH","AC","GRINDER"]);
     var maxPrice = -1;
     var minPrice = 1000000;
     const [modalStyle] = React.useState(getModalStyle);
     var location = useLocation();
     const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [priceModal,setPriceModal] = React.useState(0);
-    const [chipData, setChipData] = React.useState([
-        { key: 0, label: 'Angular' },
-        { key: 1, label: 'jQuery' },
-        { key: 2, label: 'Polymer' },
-        { key: 3, label: 'React' },
-        { key: 4, label: 'Vue.js' },
-        { key: 5, label: 'Angular' },
-        { key: 6, label: 'jQuery' },
-     
-    ]);
     const [refreshing, setRefreshing] = React.useState(false);
 
     const navigateToProduct = (flag)=>()=>{

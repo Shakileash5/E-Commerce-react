@@ -127,16 +127,6 @@ function Product() {
         setSnack(0);
     };
     var idTemp = -1;
-    const [chipData, setChipData] = React.useState([
-        { key: 0, label: 'Angular' },
-        { key: 1, label: 'jQuery' },
-        { key: 2, label: 'Polymer' },
-        { key: 3, label: 'React' },
-        { key: 4, label: 'Vue.js' },
-        { key: 5, label: 'Angular' },
-        { key: 6, label: 'jQuery' },
-     
-    ]);
     var location = useLocation();
     const [uid,setUid] = React.useState('');
     const [refreshing, setRefreshing] = React.useState(false);
@@ -230,9 +220,6 @@ function Product() {
         }
     }
 
-    const handleDelete = (chipToDelete) => () => {
-        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-    };
 
     const addProduct = ()=>()=>{
         console.log("add Product",dataVar,data)
