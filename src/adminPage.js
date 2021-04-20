@@ -276,6 +276,36 @@ function Admin() {
         }
     }
 
+    const rejectData = (idx)=>()=>{
+        try{
+            const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({userId:uid,rejectData:orderData[idx]})
+                };
+            fetch('http://127.0.0.1:8000/rejectOrder/', requestOptions)
+            .then(response => response.json())
+            .then((data) => {
+                console.log(data,"recieved")
+                if(data.status == 200){
+                    let orders = data.result;
+                    console.log(orders)
+                    setOrderData(orders);
+                }
+
+            }).finally(()=>{
+                setSnack(1);
+                setSnackMessage("product Rejected Successfully!");
+                setSnackSeverity("warning");
+            })            
+        }
+        catch(err){
+            setSnack(1);
+            setSnackMessage("Something went wront!");
+            setSnackSeverity("info");
+        }
+    }
+
     const constructor = ()=>{
         if(constructorFlag == 0){
 
@@ -357,6 +387,7 @@ function Admin() {
                                                             color="secondary"
                                                             className={classes.button}
                                                             startIcon={<ClearIcon />}
+                                                            onClick={rejectData(i)}
                                                             >
                                                             Reject
                                                         </Button>
