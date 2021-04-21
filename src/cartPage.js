@@ -111,6 +111,7 @@ const useStyles = makeStyles((theme) => ({
   items:{
       //boxShadow: "2px 3px 2px 2px #9E9E9E",
       height:"100%",
+      minWidth:700,
       padding:20,
       borderRadius:10,
       margin:10,
