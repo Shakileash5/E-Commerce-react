@@ -4,35 +4,27 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+import MoreIcon from '@material-ui/icons/MoreVert';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
-import green from '@material-ui/core/colors/green';
-import purple from '@material-ui/core/colors/purple';
 import { useHistory } from 'react-router';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Asynchronous from "./searchbar";
 import Modal from '@material-ui/core/Modal';
-import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
-import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -154,18 +146,18 @@ export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [isLoggedIn,setIsLogged] = React.useState(0);
-  const [error,setError] = React.useState(0);
+  const [error,setError] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [constructorHasRun,setConstructorHasRun] = React.useState(false);
-  const [snack,setSnack] = React.useState(0);
+  const [snack,setSnack] = React.useState(false);
   const [snackMessage,setSnackMessage] = React.useState("");
   const [snackSeverity,setSnackSeverity] = React.useState("success")
   const handleSnackClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    console.log("setSnack")
-    setSnack(0);
+    //console.log("setSnack")
+    setSnack(false);
   };
   const [values, setValues] = React.useState({
     userName: '',
@@ -222,16 +214,16 @@ export default function PrimarySearchAppBar() {
             setRefreshing(true);
             firebase.auth().signInWithEmailAndPassword(values.email,values.password).then((response)=>{
                 const uid = response.user.uid;
-                console.log(uid,":: uid");
+                //console.log(uid,":: uid");
                 //navigation1.navigate('MyTabs',{userId:uid.toString()});
-                setSnack(1);
+                setSnack(true);
                 setSnackMessage("SignedIn successfully!");
                 setSnackSeverity("success");
                 setUid(uid.toString());
             }).catch(err =>{
-                console.log("err",err);
-                setError(1);
-                setSnack(1);
+                //console.log("err",err);
+                setError(true);
+                setSnack(true);
                 setSnackMessage("Please enter Valid Data!");
                 setSnackSeverity("error");
             }).finally(()=>{
@@ -240,7 +232,7 @@ export default function PrimarySearchAppBar() {
             });
         }
         else{
-            setSnack(1);
+            setSnack(true);
             setSnackMessage("Please enter Valid Data!");
             setSnackSeverity("error");
             setOpen(false);
@@ -248,7 +240,7 @@ export default function PrimarySearchAppBar() {
   }
 
   const signupPress = ()=>()=>{
-        console.log("signUp")
+        //console.log("signUp")
         if(values.phoneNo!='' && values.email!='' && values.password!=''){
             setOpen(false);
             setRefreshing(true);
@@ -257,7 +249,7 @@ export default function PrimarySearchAppBar() {
                 .createUserWithEmailAndPassword(values.email, values.password)
                 .then((response) => {
                     const uid = response.user.uid;
-                    console.log("uid ::: ",uid);
+                    //console.log("uid ::: ",uid);
                     setUid(uid.toString());
                     const requestOptions = {
                       method: 'POST',
@@ -267,25 +259,25 @@ export default function PrimarySearchAppBar() {
                     fetch('http://127.0.0.1:8000/addDetails/', requestOptions)
                     .then(response => response.json())
                     .then((data) => {
-                        console.log(data,"recieved")
+                        //console.log(data,"recieved")
                         let orders = data.result;
                         //console.log(orders)
                         //setOrderData(orders);
                         //setData([]);
                         //getSummary([]);
                         }).catch((err)=>{
-                          setSnack(1);
+                          setSnack(true);
                           setSnackMessage("Signed up UnSuccessfully");
                           setSnackSeverity("error");
                         })
-                    setSnack(1);
+                    setSnack(true);
                     setSnackMessage("Signed up successfully");
                     setSnackSeverity("success");
                    // navigation1.navigate("Login")
                 }).catch(err =>{
                      console.log("err",err);
-                     setError(1);
-                     setSnack(1);
+                     setError(true);
+                     setSnack(true);
                      setSnackMessage("Please enter Valid Data!");
                      setSnackSeverity("error");
                      //setErrorMessage(err.message); 
@@ -295,8 +287,8 @@ export default function PrimarySearchAppBar() {
                 });
         }
         else{
-            setError(1);
-            setSnack(1);
+            setError(true);
+            setSnack(true);
             setSnackMessage("Please enter Valid Data!");
             setSnackSeverity("error");
             //setErrorMessage("Enter userName and password");
@@ -308,10 +300,10 @@ export default function PrimarySearchAppBar() {
       //console.log("Logged out");
       try{
         firebase.auth().signOut();
-        console.log("logged Out")
+        //console.log("logged Out")
         setIsLogged(0);
         setOpen(false);
-        setSnack(1);
+        setSnack(true);
         setSnackMessage("logged Out Succesfully!")
       }
       catch(err){
@@ -491,7 +483,7 @@ export default function PrimarySearchAppBar() {
         if(constructorHasRun){
             return;
         }
-        console.log("act like constructor");
+        //console.log("act like constructor");
         //retrieveData();
         //setRefreshing(true);
         firebase.auth().onAuthStateChanged(user =>{
@@ -505,7 +497,9 @@ export default function PrimarySearchAppBar() {
         })
         setConstructorHasRun(true);
     }
-    constructor();
+  
+  constructor();
+
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
@@ -519,9 +513,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem >
         <IconButton aria-label="show 11 new notifications" color="inherit"  onClick={navigateTo(1)}>
-          <Badge badgeContent={11} color="secondary">
             <ShoppingCart />
-          </Badge>
         </IconButton>
         <p>Cart</p>
       </MenuItem>
@@ -560,9 +552,7 @@ export default function PrimarySearchAppBar() {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 17 new notifications" color="inherit" onClick={navigateTo(1)}>
-              <Badge badgeContent={17} color="secondary">
                 <ShoppingCart />
-              </Badge>
             </IconButton>
             <IconButton
               edge="end"

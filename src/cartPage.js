@@ -352,7 +352,7 @@ function Cart() {
                                                     {datas.name}
                                                 </Typography>
 
-                                                <Chip label="Pipes" color="primary" />
+                                                <Chip label={datas.category} color="primary" />
 
                                                 <Grid item container direction="row"  alignItems="center">
                                                     <Typography gutterBottom variant="subtitle1">
@@ -434,7 +434,7 @@ function Cart() {
                                                     {datas.name}
                                                 </Typography>
 
-                                                <Chip label="Pipes" color="primary" />
+                                                <Chip label={datas.category} color="primary" />
 
                                                 <Grid item container direction="row"  alignItems="center">
                                                     <Typography gutterBottom variant="subtitle1">

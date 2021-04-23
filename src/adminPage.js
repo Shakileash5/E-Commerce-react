@@ -223,6 +223,7 @@ function Admin() {
                     let orders = data.result[1];
                     console.log(orders)
                     setOrderData(orders);
+                    getData();
                 }
 
             }).finally(()=>{
@@ -341,7 +342,7 @@ function Admin() {
                                                             {datas.name}
                                                         </Typography>
 
-                                                        <Chip label="Pipes" color="primary" />
+                                                        <Chip label={datas.category} color="primary" />
 
                                                         <Grid item container direction="row"  alignItems="center">
                                                             <Typography gutterBottom variant="subtitle1">
@@ -351,13 +352,21 @@ function Admin() {
                                                                 {datas.price}
                                                             </Typography>
                                                         </Grid>
-                                                        <Grid container direction="row" spacing={2}>
-                                                            <Grid item>
-                                                                
-                                                            </Grid>
-                                                            <Grid item>
-                                                               
-                                                            </Grid>
+                                                        <Grid item container direction="row"  alignItems="center">
+                                                            <Typography gutterBottom variant="subtitle1" style={{marginRight:2}}>
+                                                                Email:
+                                                            </Typography>
+                                                            <Typography gutterBottom variant="h6">
+                                                                {datas.email}
+                                                            </Typography>
+                                                        </Grid>
+                                                        <Grid item container direction="row"  alignItems="center">
+                                                            <Typography gutterBottom variant="subtitle1" style={{marginRight:2}}>
+                                                                PhoneNo:
+                                                            </Typography>
+                                                            <Typography gutterBottom variant="h6">
+                                                                {datas.phoneNo}
+                                                            </Typography>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
@@ -403,7 +412,7 @@ function Admin() {
                                                     {datas.name}
                                                 </Typography>
 
-                                                <Chip label="Pipes" color="primary" />
+                                                <Chip label={datas.category} color="primary" />
 
                                                 <Grid item container direction="row"  alignItems="center">
                                                     <Typography gutterBottom variant="subtitle1">

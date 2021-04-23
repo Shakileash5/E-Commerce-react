@@ -7,7 +7,7 @@ export const CarouselApp = () => {
     
     const navigateTo = (flag)=>{
         //history.push("/product");
-        console.log("cebi")
+        //console.log("cebi")
         history.push("/search");
         if( flag){
             history.push("/search/"+flag);
@@ -19,37 +19,34 @@ export const CarouselApp = () => {
   <Carousel.Item interval={1000}>
     <img
       className="d-block w-100"
-      src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
+      src="https://image.shutterstock.com/image-vector/holi-dhamaka-offer-40-75-260nw-1273015360.jpg"
       alt="First slide"
       style={{height:200}}
     />
     <Carousel.Caption>
-      <h3>First slide label</h3>
-      <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+      <h3></h3>
     </Carousel.Caption>
   </Carousel.Item>
   <Carousel.Item interval={500}>
     <img
       className="d-block w-100"
-      src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg"
+      src="https://image.freepik.com/free-vector/holi-sale-header-banner-with-70-discount-offer_1302-21265.jpg"
       alt="Second slide"
       style={{height:200}}
     />
     <Carousel.Caption>
-      <h3>Second slide label</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <h3></h3>
     </Carousel.Caption>
   </Carousel.Item>
   <Carousel.Item>
     <img
       className="d-block w-100"
-      src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
+      src="https://cdn.static-zoutons.com/images/originals/blog/AmazonDiwaliSaleOffers_1534756239_1604661395.jpg"
       alt="Third slide"
       style={{height:200}}
     />
     <Carousel.Caption>
-      <h3>Third slide label</h3>
-      <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+      <h3></h3>
     </Carousel.Caption>
   </Carousel.Item>
 </Carousel>
