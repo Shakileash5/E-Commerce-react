@@ -1,29 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import PrimarySearchAppBar from './appBar';
-import MiniCard from "./components/miniCard";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-import GolfCourseIcon from '@material-ui/icons/GolfCourse';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { green } from '@material-ui/core/colors';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
-import blue from '@material-ui/core/colors/blue';
 import { useHistory } from 'react-router';
 import firebase from './firebase';
 import "firebase/auth";
@@ -79,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:15,
     boxShadow: "2px 2px 3px 2px #9E9E9E",
     padding:20,
-    backgroundColor:"#F6F6F7",
+    //backgroundColor:"#F6F6F7",
     backgroundColor:"#F1F3F4"
   },
   paper2: {
@@ -125,12 +108,10 @@ function Cart() {
     const [totalQuantity,setTotalQuantity] = React.useState(0);
     const [totalPrice,setTotalPrice] = React.useState(0);
     const [constructorFlag,setConstructorFlag] = React.useState(0);
-    const [imgSrc,setImgSrc] = React.useState("https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg");
     const [snack,setSnack] = React.useState(false);
     const [snackMessage,setSnackMessage] = React.useState("");
     const [snackSeverity,setSnackSeverity] = React.useState("success");
     const [data,setData] = React.useState([]);
-    const [viewData,setViewData] = React.useState([]);
     const [orderData,setOrderData] = React.useState([]);
     var orderRequests = [];
     const [uid,setUid] = React.useState('');
@@ -202,6 +183,7 @@ function Cart() {
                             tempP = parseInt(tempP.join(""))
                             val.price = tempP;
                         }
+                        return null
                     });
                 }
                 setData(products);
@@ -269,7 +251,7 @@ function Cart() {
     }
 
     const constructor = ()=>{
-        if(constructorFlag == 0){
+        if(constructorFlag === 0){
 
             let tempData = [
                 {
@@ -326,7 +308,7 @@ function Cart() {
 
     constructor();
     return (
-        <div className="App" className={classes.root}>
+        <div className={classes.root}>
             <PrimarySearchAppBar />
             <Backdrop className={classes.backdrop} open={refreshing} >
                 <CircularProgress color="inherit" />
@@ -343,7 +325,7 @@ function Cart() {
                                     <Grid container spacing={5} >
                                         <div className={classes.paper2} onClick={navigateTo(i)}>
                                                     
-                                            <img className={classes.img} id="mainImg" src={datas.img_1} />
+                                            <img className={classes.img} alt="loading" id="mainImg" src={datas.img_1} />
                                                     
                                         </div>
                                         <Grid item  sm container alignItems="flex-start">
@@ -425,7 +407,7 @@ function Cart() {
                                     <Grid container spacing={5} >
                                         <div className={classes.paper2} onClick={navigateTo(datas.key)}>
                                                     
-                                            <img className={classes.img} id="mainImg" src={datas.img_1} />
+                                            <img className={classes.img} alt="loading" id="mainImg" src={datas.img_1} />
                                                     
                                         </div>
                                         <Grid item  sm container alignItems="flex-start">

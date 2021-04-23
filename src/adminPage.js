@@ -1,5 +1,4 @@
 import PrimarySearchAppBar from './appBar';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -112,7 +111,7 @@ function Admin() {
     const [snack,setSnack] = React.useState(false);
     const [snackMessage,setSnackMessage] = React.useState("");
     const [snackSeverity,setSnackSeverity] = React.useState("success");
-    const [data,setData] = React.useState([]);
+    //const [data,setData] = React.useState([]);
     const [orderData,setOrderData] = React.useState([]);
     const [uid,setUid] = React.useState('');
     const [todoOrder,setTodoOrder] = React.useState([{"name":"fwef","give":"fwefe"}]);
@@ -151,7 +150,7 @@ function Admin() {
                 //console.log(response)
                 return response.json()
                 }).then((response)=>{
-                    if(response.result==false){
+                    if(response.result===false){
                         history.push("/");
                     }
                 });
@@ -170,7 +169,7 @@ function Admin() {
             }).then((response)=>{
                 console.log(response)
                 let acceptData = response.result;
-                if(response.status!=200){
+                if(response.status!==200){
                     acceptData = []
                 }
                 //todoOrder = acceptData.slice(0);
@@ -219,7 +218,7 @@ function Admin() {
             .then(response => response.json())
             .then((data) => {
                 console.log(data,"recieved")
-                if(data.status == 200){
+                if(data.status === 200){
                     let orders = data.result[1];
                     console.log(orders)
                     setOrderData(orders);
@@ -250,7 +249,7 @@ function Admin() {
             .then(response => response.json())
             .then((data) => {
                 console.log(data,"recieved")
-                if(data.status == 200){
+                if(data.status === 200){
                     let orders = data.result;
                     console.log(orders)
                     setOrderData(orders);
@@ -270,7 +269,7 @@ function Admin() {
     }
 
     const constructor = ()=>{
-        if(constructorFlag == 0){
+        if(constructorFlag === 0){
 
             console.log("working");
             setConstructorFlag(1);
@@ -294,7 +293,7 @@ function Admin() {
 
     constructor();
     return (
-        <div className="App" className={classes.root}>
+        <div className={classes.root}>
             <PrimarySearchAppBar />
             <Backdrop className={classes.backdrop} open={refreshing} >
                 <CircularProgress color="inherit" />
@@ -316,13 +315,13 @@ function Admin() {
                  
                     
                     {
-                        state.accepted==true?
+                        state.accepted===true?
                     <div>
                     <Typography align="left" variant="h4" style={{margin:20}}>
                         Accepted Orders
                     </ Typography>
                     <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
-                        <Grid item  alignItems="flex-start" style={{width:700}} >
+                        <Grid item  style={{width:700}} >
                             {   
                                 
                                 todoOrder.map((datas,i)=>{
@@ -333,7 +332,7 @@ function Admin() {
                                             <Grid container spacing={5} >
                                                 <div className={classes.paper2} onClick={navigateTo(datas.key)}>
                                                             
-                                                    <img className={classes.img} id="mainImg" src={datas.img_1} />
+                                                    <img className={classes.img} id="mainImg" alt="loading" src={datas.img_1} />
                                                             
                                                 </div>
                                                 <Grid item  sm container alignItems="flex-start">
@@ -393,7 +392,7 @@ function Admin() {
                 Order Request
             </ Typography>
             <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
-                <Grid item  alignItems="flex-start" style={{width:700}} >
+                <Grid item   style={{width:700}} >
                     { 
                         orderData!=null?
                         orderData.map((datas,i)=>{
@@ -403,7 +402,7 @@ function Admin() {
                                     <Grid container spacing={5} >
                                         <div className={classes.paper2} onClick={navigateTo(datas.key)}>
                                                     
-                                            <img className={classes.img} id="mainImg" src={datas.img_1} />
+                                            <img className={classes.img} id="mainImg" alt="loading"  src={datas.img_1} />
                                                     
                                         </div>
                                         <Grid item  sm container alignItems="flex-start">

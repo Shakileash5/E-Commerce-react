@@ -9,7 +9,6 @@ import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
@@ -146,7 +145,6 @@ export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [isLoggedIn,setIsLogged] = React.useState(0);
-  const [error,setError] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [constructorHasRun,setConstructorHasRun] = React.useState(false);
   const [snack,setSnack] = React.useState(false);
@@ -167,7 +165,7 @@ export default function PrimarySearchAppBar() {
     weightRange: '',
     showPassword: false,
   });
-  const [isLoading, setLoading] = React.useState(false);
+
   const [screen,setScreen] = React.useState(0);
   const [uid,setUid] = React.useState('');
 
@@ -209,7 +207,7 @@ export default function PrimarySearchAppBar() {
   };
 
   const signInPress = ()=>()=>{
-    if(values.email!="" && values.password!=""){
+    if(values.email!=="" && values.password!==""){
             setOpen(false);
             setRefreshing(true);
             firebase.auth().signInWithEmailAndPassword(values.email,values.password).then((response)=>{
@@ -222,7 +220,6 @@ export default function PrimarySearchAppBar() {
                 setUid(uid.toString());
             }).catch(err =>{
                 //console.log("err",err);
-                setError(true);
                 setSnack(true);
                 setSnackMessage("Please enter Valid Data!");
                 setSnackSeverity("error");
@@ -241,7 +238,7 @@ export default function PrimarySearchAppBar() {
 
   const signupPress = ()=>()=>{
         //console.log("signUp")
-        if(values.phoneNo!='' && values.email!='' && values.password!=''){
+        if(values.phoneNo!=='' && values.email!=='' && values.password!==''){
             setOpen(false);
             setRefreshing(true);
             firebase
@@ -260,23 +257,22 @@ export default function PrimarySearchAppBar() {
                     .then(response => response.json())
                     .then((data) => {
                         //console.log(data,"recieved")
-                        let orders = data.result;
+                        //let orders = data.result;
                         //console.log(orders)
                         //setOrderData(orders);
                         //setData([]);
                         //getSummary([]);
-                        }).catch((err)=>{
+                    }).catch((err)=>{
                           setSnack(true);
                           setSnackMessage("Signed up UnSuccessfully");
                           setSnackSeverity("error");
-                        })
+                    })
                     setSnack(true);
                     setSnackMessage("Signed up successfully");
                     setSnackSeverity("success");
                    // navigation1.navigate("Login")
                 }).catch(err =>{
                      console.log("err",err);
-                     setError(true);
                      setSnack(true);
                      setSnackMessage("Please enter Valid Data!");
                      setSnackSeverity("error");
@@ -287,7 +283,6 @@ export default function PrimarySearchAppBar() {
                 });
         }
         else{
-            setError(true);
             setSnack(true);
             setSnackMessage("Please enter Valid Data!");
             setSnackSeverity("error");
@@ -314,7 +309,7 @@ export default function PrimarySearchAppBar() {
   const body = (
     <div style={modalStyle} className={classes.paper}>
     {
-      screen==0?
+      screen===0?
         <div>
         <h2 id="simple-modal-title">SignIn</h2>
         <Grid container direction={"row"}>
@@ -444,10 +439,10 @@ export default function PrimarySearchAppBar() {
   );
 
   const navigateTo = (flag)=>()=>{
-    if(flag == 1){
+    if(flag === 1){
       history.push("/cart")
     }
-    else if(flag == 0){
+    else if(flag === 0){
       history.push("/")
 
     }
