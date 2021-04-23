@@ -4,11 +4,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useHistory } from 'react-router';
 
-function sleep(delay = 0) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
-}
 
 export default function Asynchronous() {
   const [open, setOpen] = React.useState(false);
@@ -18,9 +13,9 @@ export default function Asynchronous() {
   const [calledOnce,setCall] = React.useState(0);
   const navigateTo = (flag)=>{
         //history.push("/product");
-        console.log("cebi",flag)
+        //console.log("cebi",flag)
         //history.push("/search");
-        if( calledOnce==0 && flag){
+        if( calledOnce===0 && flag){
             setCall(1);
             history.push("/search/"+flag);
 
@@ -40,11 +35,11 @@ export default function Asynchronous() {
       //const countries = await response.json();
       var products = {};
       fetch("http://127.0.0.1:8000/getAllProducts/").then((response)=>{
-        console.log(response)
+        //console.log(response)
         return response.json()
       }).then((response)=>{
         products = response;
-        console.log("products",products)
+        //console.log("products",products)
         if (active) {
           //console.log(products.result,"products");
           let arr = [];
@@ -53,10 +48,11 @@ export default function Asynchronous() {
                 let temp = products.result[key].name.split(" ")
                 temp = temp.slice(0,5);
                 temp = temp.join(" ");
-                arr.push({name:temp})
+                arr.push({name:temp});
+                return null;
             })
         setOptions(arr);
-        console.log(arr,options)
+        //console.log(arr,options)
         }
       }).catch(err=>{
         console.log("something went wrong!",err);
@@ -73,7 +69,7 @@ export default function Asynchronous() {
   }, [loading]);
 
   const keyPress = (e)=>{
-      if(e.keyCode == 13){
+      if(e.keyCode === 13){
          //console.log('value', e.target.value);
           history.push("/search/"+e.target.value)
          // put the login here

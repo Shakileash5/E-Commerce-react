@@ -172,7 +172,7 @@ function Cart() {
                 return response.json()
             }).then((response)=>{
                 let products = response.result;
-                console.log("products",products);
+                //console.log("products",products);
                 if(products==null){
                     products=[]
                 }
@@ -197,13 +197,13 @@ function Cart() {
 
 
     const getOrders = ()=>{
-        console.log(userId,"getOrders")
+        //console.log(userId,"getOrders")
         fetch("http://127.0.0.1:8000/getUserOrders/?uid="+userId).then((response)=>{
                 //console.log(response)
                 return response.json()
             }).then((response)=>{
                 let orders = response.result;
-                console.log("orders",orders);
+                //console.log("orders",orders);
                 if(orderData==null){
                     setOrderData([]);
                     setOrderData([]);
@@ -212,7 +212,7 @@ function Cart() {
                     setOrderData(orders);
                     orderRequests = orders;
                 }
-                console.log(orderRequests,"ordredata")
+                //console.log(orderRequests,"ordredata")
                 
             }).catch(err=>{
                 console.log("something went wrong!",err);
@@ -229,9 +229,9 @@ function Cart() {
             fetch('http://127.0.0.1:8000/orderProducts/', requestOptions)
             .then(response => response.json())
             .then((data) => {
-                console.log(data,"recieved")
+                //console.log(data,"recieved")
                 let orders = data.result;
-                console.log(orders)
+                //console.log(orders)
                 setOrderData(orders);
                 setData([]);
                 getSummary([]);
@@ -261,7 +261,7 @@ function Cart() {
                     key:2, name: "Smart 12 Inch tv samsung", Price: 26900
                 },
             ]
-            console.log("working");
+            //console.log("working");
             setConstructorFlag(1);
             getSummary(tempData);
             checkStatus();
@@ -299,7 +299,7 @@ function Cart() {
 
     const navigateTo = (flag)=>()=>{
         //history.push("/product");
-        if( flag>=0){
+        if( flag){
             history.push("/product/"+flag);
         }
 
@@ -317,13 +317,13 @@ function Cart() {
                 My Cart
             </ Typography>
             <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
-                <Grid item  alignItems="flex-start" style={{width:700,marginRight:10}} >
+                <Grid item  style={{width:700,marginRight:10}} >
                     {   data.map((datas,i)=>{
                             return(
                             <Grid key={i} item sm container >
                                 <div  className={classes.items}>
                                     <Grid container spacing={5} >
-                                        <div className={classes.paper2} onClick={navigateTo(i)}>
+                                        <div className={classes.paper2} onClick={navigateTo(datas.key)}>
                                                     
                                             <img className={classes.img} alt="loading" id="mainImg" src={datas.img_1} />
                                                     
@@ -396,11 +396,10 @@ function Cart() {
                 My Orders
             </ Typography>
             <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
-                <Grid item  alignItems="flex-start" style={{width:700}} >
+                <Grid item style={{width:700}} >
                     {   //console.log("update",orderRequests)
                         orderData!=null?
                         orderData.map((datas,i)=>{
-                            console.log("update",orderData);
                             return( 
                             <Grid key={i} item sm container  >
                                 <div  className={classes.items}>

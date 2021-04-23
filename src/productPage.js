@@ -106,7 +106,6 @@ function Product() {
         //console.log("setSnack")
         setSnack(false);
     };
-    var idTemp = -1;
     var location = useLocation();
     const [uid,setUid] = React.useState('');
     const [refreshing, setRefreshing] = React.useState(false);
@@ -159,8 +158,7 @@ function Product() {
 
             setConstructorFlag(1);
             //getMetaData();
-            let temp = getData();
-            console.log("data",temp)
+            getData();
             //setData(tempData[idTemp]);
             //console.log(idTemp,tempData,"data")
             //setImgSrc(tempData[idTemp].src1);

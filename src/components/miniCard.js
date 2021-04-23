@@ -35,7 +35,6 @@ function MiniCard({name,price,image}) {
                         image={image}
                         src={image}
                         style={{padding:10}}
-                        resizeMode="cover"
                         title="Contemplative Reptile"
                         />
                         <CardContent>

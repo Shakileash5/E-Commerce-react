@@ -5,18 +5,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
-import {Link, useLocation} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import { useHistory } from 'react-router';
-import firebase from './firebase';
-import "firebase/auth";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import FeaturedPlayListIcon from '@material-ui/icons/FeaturedPlayList';
 import CategoryIcon from '@material-ui/icons/Category';
 import Modal from '@material-ui/core/Modal';
-import MuiAlert from '@material-ui/lab/Alert';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import Radio from '@material-ui/core/Radio';
@@ -28,10 +24,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
-}
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 function getModalStyle() {
@@ -95,14 +87,14 @@ function Search() {
     const [viewData,setViewData] = React.useState([]);
     const [minMaxValue, setMinMax] = React.useState([0, 10]);
     const [category, setCategory] = React.useState('');
-    const [categoryModal,setCategoryModal] = React.useState(0);
+    const [categoryModal,setCategoryModal] = React.useState(false);
     const [categoryData,setCategoryData] = React.useState(["TV","FRIDGE","WATCH","AC","GRINDER"]);
     var maxPrice = -1;
     var minPrice = 1000000;
     const [modalStyle] = React.useState(getModalStyle);
     var location = useLocation();
     const [constructorFlag,setConstructorFlag] = React.useState(0);
-    const [priceModal,setPriceModal] = React.useState(0);
+    const [priceModal,setPriceModal] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
 
     const navigateToProduct = (flag)=>()=>{
@@ -125,8 +117,9 @@ function Search() {
             arr.push(value)
             //console.log("inside",value)
           }
+          return null;
         });
-        console.log(arr,"data ",viewData)
+        //console.log(arr,"data ",viewData)
         setMinMax(newValue);
         setData(arr)
     };
@@ -136,18 +129,19 @@ function Search() {
       let tempCategory = event.target.value;
       viewData.map((value)=>{
           //console.log(price,minMaxValue,price>=minMaxValue[0])
-          if(value.category.toLocaleLowerCase() == tempCategory.toLocaleLowerCase()){
-            arr.push(value)
+          if(value.category.toLocaleLowerCase() === tempCategory.toLocaleLowerCase()){
+            arr.push(value);
             //console.log("inside",value)
           }
+          return null;
         });
-      console.log(arr,"data ",viewData)
+      //console.log(arr,"data ",viewData)
       setData(arr)
       setCategory(event.target.value);
     };  
 
     React.useEffect(() => {
-      console.log("useEffect",data)
+      //console.log("useEffect",data)
       setData(data);
     }, [data])
 
@@ -177,10 +171,10 @@ function Search() {
           <FormLabel component="legend">Category</FormLabel>
             <RadioGroup aria-label="gender" name="gender1" value={category} onChange={handleCategoryChange}>
               {
-                categoryData.map((val)=>{
+                categoryData.map((val,i)=>{
                   
                         return(
-                            <FormControlLabel value={val} control={<Radio />} label={val} />
+                            <FormControlLabel key={i} value={val} control={<Radio />} label={val} />
                         )      
                 })
               }
@@ -203,24 +197,23 @@ function Search() {
           return 0
         }
       });
-      console.log(tempArr);
+      //console.log(tempArr);
       setViewData(tempArr);
       //setData(tempArr);
       setData(tempArr.slice(0));
-      console.log(data)
+      //console.log(data)
     }
 
     const getData = ()=>{
       var products = {};
       let splitData = location.pathname.split("/");
-      let arr = [];
-      console.log(splitData,"keywords");
+      //console.log(splitData,"keywords");
       fetch("http://127.0.0.1:8000/getSearchResults/?keyword="+splitData[splitData.length-1]).then((response)=>{
-        console.log(response)
+        //console.log(response)
         return response.json()
       }).then((response)=>{
         products = response;
-        console.log("products",products)
+        //console.log("products",products)
         
           //console.log(products.result,"products");
           let arr = [];
@@ -232,44 +225,36 @@ function Search() {
                 if(minPrice>price){
 
                   minPrice = price;
-                  console.log(minPrice,price)
+                  //console.log(minPrice,price)
                 }
                 if(maxPrice<price){
                   maxPrice = price;
-                  console.log(maxPrice,data.price,price)
+                  //console.log(maxPrice,data.price,price)
                 }
                 setMinMax([minPrice,maxPrice]);
                 arr.push(data);
+                return null;
             })
         //setOptions(arr);
         setData(arr);
         setViewData(arr);
-        console.log(viewData,"iy",maxPrice,minPrice)
-        return arr;
-        
+        //console.log(viewData,"iy",maxPrice,minPrice)
         setRefreshing(false);
+        return arr;
       
       }).catch(err=>{
         console.log("something went wrong!",err);
-        return [];
         setRefreshing(false);
+        return [];
       });
     }
 
     const constructor = ()=>{
-        if(constructorFlag == 0){
+        if(constructorFlag === 0){
             setRefreshing(true);
-            let tempData = [
-                {
-                    key:1, name: "Smart 12 Inch tv samsung", Price: 26900
-                },
-                {
-                    key:2, name: "Smart 12 Inch tv samsung", Price: 26900
-                },
-            ]
             setConstructorFlag(1);
-            let arr = getData();
-            console.log("whats happening",arr)
+            getData();
+            //console.log("whats happening",arr)
             //setData(arr);
             setRefreshing(false);
             //setViewData(tempData);
@@ -290,7 +275,7 @@ function Search() {
                         icon={<LocalAtmIcon />}
                         label={"Price"}
                         clickable
-                        onClick={()=>{setPriceModal(1)}}
+                        onClick={()=>{setPriceModal(true)}}
                         className={classes.chip}
                         variant="outlined"
                         color="primary"
@@ -312,7 +297,7 @@ function Search() {
                         icon={<CategoryIcon />}
                         label={"Category"}
                         clickable
-                        onClick={()=>{setCategoryModal(1)}}
+                        onClick={()=>{setCategoryModal(true)}}
                         className={classes.chip}
                         variant="outlined"
                         color="primary"
@@ -323,7 +308,7 @@ function Search() {
             <Grid container spacing={1} direction="row">
               {
                 data.map((data,i)=>{
-                  console.log(data.img_1)
+                  //console.log(data.img_1)
                   return(
                     <div key={data.key} onClick={navigateToProduct(data.key)}>
                         <MiniCard name={data.name} price ={data.price} image={data.img_1} />
@@ -340,7 +325,7 @@ function Search() {
             </Backdrop>
             <Modal
               open={priceModal}
-              onClose={()=>{setPriceModal(0);}}
+              onClose={()=>{setPriceModal(false);}}
               aria-labelledby="simple-modal-title"
               aria-describedby="simple-modal-description"
               >
@@ -348,7 +333,7 @@ function Search() {
             </Modal>
             <Modal
               open={categoryModal}
-              onClose={()=>{setCategoryModal(0);}}
+              onClose={()=>{setCategoryModal(false);}}
               aria-labelledby="simple-modal-title"
               aria-describedby="simple-modal-description"
               >
