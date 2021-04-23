@@ -115,7 +115,8 @@ function Admin() {
     const [data,setData] = React.useState([]);
     const [orderData,setOrderData] = React.useState([]);
     const [uid,setUid] = React.useState('');
-    var todoOrder = [];
+    const [todoOrder,setTodoOrder] = React.useState([{"name":"fwef","give":"fwefe"}]);
+    var values = [];
     var userId = "";
     const [refreshing, setRefreshing] = React.useState(false);
     const [state, setState] = React.useState({
@@ -172,12 +173,14 @@ function Admin() {
                 if(response.status!=200){
                     acceptData = []
                 }
-                todoOrder = acceptData.slice(0);
-                console.log(todoOrder,"acceptedData",acceptData)
+                //todoOrder = acceptData.slice(0);
+                setTodoOrder(acceptData.slice(0))
+                values = response.result.slice(0);
+                console.log(values,"acceptedData",acceptData)
             }).catch(err=>{
                 console.log("something went wrong!",err);
             }).finally(()=>{
-                console.log(todoOrder,"acceptedData")
+                console.log(values,"acceptedData")
             })
 
 
@@ -309,17 +312,18 @@ function Admin() {
                     label="See accepted orders"
                 />
             </FormGroup>
-
-            {
-                state.accepted==true?
-                <div>  
+                 
+                    
+                    {
+                        state.accepted==true?
+                    <div>
                     <Typography align="left" variant="h4" style={{margin:20}}>
                         Accepted Orders
                     </ Typography>
                     <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
                         <Grid item  alignItems="flex-start" style={{width:700}} >
                             {   
-                                todoOrder==[]?
+                                
                                 todoOrder.map((datas,i)=>{
                                     
                                     return( 
@@ -349,26 +353,10 @@ function Admin() {
                                                         </Grid>
                                                         <Grid container direction="row" spacing={2}>
                                                             <Grid item>
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="secondary"
-                                                                    className={classes.button}
-                                                                    startIcon={<ClearIcon />}
-                                                                    onClick={rejectData(i)}
-                                                                    >
-                                                                    Reject
-                                                                </Button>
+                                                                
                                                             </Grid>
                                                             <Grid item>
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="primary"
-                                                                    className={classes.button}
-                                                                    startIcon={<CheckIcon />}
-                                                                    onClick={acceptData(i)}
-                                                                    >
-                                                                    Accept
-                                                                </Button>
+                                                               
                                                             </Grid>
                                                         </Grid>
                                                     </Grid>
@@ -377,31 +365,29 @@ function Admin() {
                                         </div>
                                     </Grid>) 
                                     } 
-                                ):
-                                    <Typography align="left">
-                                        No Orders{todoOrder}
-                                    </Typography>
-                                
+                                )
                             }
                     
                         </Grid>
                     </Grid>
-                </div>:
-                null
-            }
+                    </div>
+                    :
+                    null
+                
+                }
+           
 
 
 
 
             <Typography align="left" variant="h4" style={{margin:20}}>
-                My Orders 
+                Order Request
             </ Typography>
             <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
                 <Grid item  alignItems="flex-start" style={{width:700}} >
                     { 
                         orderData!=null?
                         orderData.map((datas,i)=>{
-                            console.log("update",orderData);
                             return( 
                             <Grid key={i} item sm container  >
                                 <div  className={classes.items}>
@@ -425,6 +411,22 @@ function Admin() {
                                                     </Typography>
                                                     <Typography gutterBottom variant="h6">
                                                         {datas.price}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item container direction="row"  alignItems="center">
+                                                    <Typography gutterBottom variant="subtitle1" style={{marginRight:2}}>
+                                                        Email:
+                                                    </Typography>
+                                                    <Typography gutterBottom variant="h6">
+                                                        {datas.email}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item container direction="row"  alignItems="center">
+                                                    <Typography gutterBottom variant="subtitle1" style={{marginRight:2}}>
+                                                        PhoneNo:
+                                                    </Typography>
+                                                    <Typography gutterBottom variant="h6">
+                                                        {datas.phoneNo}
                                                     </Typography>
                                                 </Grid>
                                                 <Grid container direction="row" spacing={2}>

@@ -335,7 +335,7 @@ function Cart() {
                 My Cart
             </ Typography>
             <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.contentList} >
-                <Grid item  alignItems="flex-start" style={{width:700}} >
+                <Grid item  alignItems="flex-start" style={{width:700,marginRight:10}} >
                     {   data.map((datas,i)=>{
                             return(
                             <Grid key={i} item sm container >
