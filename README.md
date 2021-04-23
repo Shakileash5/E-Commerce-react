@@ -23,7 +23,9 @@ What makes our app standout!
 * Database : Firebase 🔥 
 
 # Prerequisites
-Make sure you have knowledge about react-native,yarn and expo-cli. Follow the [official documentation](https://reactnative.dev/docs/environment-setup).
+Make sure you have knowledge about react and yarn. Follow the [official documentation](https://reactjs.org/docs/getting-started.html).
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 * npm
 
   ```sh
@@ -32,11 +34,10 @@ Make sure you have knowledge about react-native,yarn and expo-cli. Follow the [o
 * npm
 
   ```sh
-  npm install create-react-native-app -g
+  npm install create-react-app -g
   ```
 
 # Installation
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 * Clone the repo
 
     ``` bash
