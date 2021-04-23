@@ -1,28 +1,13 @@
-import React, { Component } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import React from 'react';
 import Typography from '@material-ui/core/Typography';
-//import HorizontalScroll from './horizontalScroll.js';
-//import HorizontalScroll from 'react-scroll-horizontal'
-import styled, { createGlobalStyle } from "styled-components";
-//import Exper from "./experiment.js";
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Grid from '@material-ui/core/Grid';
-import MiniCard from "./miniCard";
 import { useHistory } from 'react-router';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 
-const SampleCard = styled.div`
-  position: relative;
-  height: 300px;
-  width: 500px;
-  background-color: #111f30;
-  margin-right: 75px;
-  flex-shrink: 0;
-`;
+
 const useStyles = makeStyles((theme) => ({
    root: {
     maxWidth: 345,
@@ -54,42 +39,10 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0.5),
   },
 }));
-const SampleCards = React.memo(() =>
-  Array(5)
-    .fill(0)
-    .map((_e, i) => <Cards key={`sampleCard-${i}`} />)
-);
-
- function Cards(){
-   
-  return(
-    <div style={{padding:10,margin:5,borderRadius:5,borderWidth:1,
-    backgroundColor:"#F1F3F4"}} >
-    <img
-      src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg"
-      alt="Second slide"
-      style={{height:100,width:100}}
-    />    
-    <Typography variant="h5" component="h5" align="left">  
-          Pipes
-    </Typography>
-    </div>
-  )
-}
-
-    const flexContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  padding: 0,
-  backgroundColor:'black',
-  color:"white",
-};
 
 export const CategorySlider = () => {
   const classes = useStyles();
     const history = useHistory();
-    const [data,setData] = React.useState([]);
-    const [viewData,setViewData] = React.useState([]);
     const [constructorFlag,setConstructorFlag] = React.useState(0);
     const dummyData = {
       "TV":[
@@ -156,20 +109,10 @@ export const CategorySlider = () => {
     };
 
     const constructor = ()=>{
-        if(constructorFlag == 0){
+        if(constructorFlag === 0){
             setRefreshing(true);
-            let tempData = [
-                {
-                    key:1, name: "Smart 12 Inch tv samsung", Price: 26900
-                },
-                {
-                    key:2, name: "Smart 12 Inch tv samsung", Price: 26900
-                },
-            ]
             setConstructorFlag(1);
-            setData(tempData);
             setRefreshing(false);
-            //setViewData(tempData);
 
         }
     }
@@ -198,7 +141,7 @@ export const CategorySlider = () => {
             <Grid container direction="column" style={{padding:10,marginTop:10}} spacing={5}> 
               <Grid item container direction="row" onClick={navigateTo(dummyData[category][0].key)}>
                 <Grid item>
-                    <img style={{height:100,width:150}} src={dummyData[category][0].img_1} />
+                    <img style={{height:100,width:150}} alt="loading" src={dummyData[category][0].img_1} />
                 </Grid> 
                 <Grid item>
                     <Grid container direction="column" alignItems="flex-start" style={{width:250}}>
@@ -218,7 +161,7 @@ export const CategorySlider = () => {
               </Grid>
               <Grid item container direction="row" onClick={navigateTo(dummyData[category][1].key)}>
                 <Grid item>
-                    <img style={{height:100,width:150}} src={dummyData[category][1].img_1} />
+                    <img style={{height:100,width:150}} alt="loading" src={dummyData[category][1].img_1} />
                 </Grid> 
                 <Grid item>
                     <Grid container direction="column" alignItems="flex-start" style={{width:250}}>
@@ -243,7 +186,7 @@ export const CategorySlider = () => {
             <Grid container direction="column" style={{padding:10,marginTop:10}} spacing={5}> 
               <Grid item container direction="row" onClick={navigateTo(dummyData[category][2].key)}>
                 <Grid item>
-                    <img style={{height:100,width:150}} src={dummyData[category][2].img_1} />
+                    <img style={{height:100,width:150}} alt="loading" src={dummyData[category][2].img_1} />
                 </Grid> 
                 <Grid item>
                     <Grid container direction="column" alignItems="flex-start" style={{width:250}}>
@@ -263,7 +206,7 @@ export const CategorySlider = () => {
               </Grid>
               <Grid item container direction="row" onClick={navigateTo(dummyData[category][3].key)}>
                 <Grid item>
-                    <img style={{height:100,width:150}} src={dummyData[category][3].img_1} />
+                    <img style={{height:100,width:150}} alt="loading" src={dummyData[category][3].img_1} />
                 </Grid> 
                 <Grid item>
                     <Grid container direction="column" alignItems="flex-start" style={{width:250}}>

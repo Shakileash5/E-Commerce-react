@@ -1,5 +1,4 @@
 import PrimarySearchAppBar from './appBar';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -11,30 +10,13 @@ import Chip from '@material-ui/core/Chip';
 import GolfCourseIcon from '@material-ui/icons/GolfCourse';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import { green } from '@material-ui/core/colors';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import blue from '@material-ui/core/colors/blue';
-import {Link, useLocation} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import firebase from './firebase';
 import "firebase/auth";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-
-const themeCustom = createMuiTheme({
-  palette: {
-    primary: {
-      main: blue[500]
-    },
-    secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
-    }
-  }
-});
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -46,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection:'row',
     top:0,
     alignItems:"flex-start",
-    justifyContent:"flex-start"
   },
   paper: {
     padding: theme.spacing(4),
@@ -115,7 +96,6 @@ function Product() {
     const [category,setCategory] = React.useState("");
     const [constructorFlag,setConstructorFlag] = React.useState(0);
     const [imgSrc,setImgSrc] = React.useState("");
-    const [id,setId] = React.useState(-1);
     const [snack,setSnack] = React.useState(false);
     const [snackMessage,setSnackMessage] = React.useState("");
     const [snackSeverity,setSnackSeverity] = React.useState("success")
@@ -130,14 +110,6 @@ function Product() {
     var location = useLocation();
     const [uid,setUid] = React.useState('');
     const [refreshing, setRefreshing] = React.useState(false);
-
-    const getMetaData = ()=>{
-        //console.log(location);
-        let splitData = location.pathname.split("/");
-        setId(parseInt(splitData[splitData.length-1]));
-        idTemp = parseInt(splitData[splitData.length-1]);
-        //console.log(id,splitData,parseInt(splitData[splitData.length-1]))
-    }
 
     const checkStatus =()=>{
         
@@ -173,41 +145,21 @@ function Product() {
         setUrlArr(arr);
         setImgSrc(tempData.img_2)
         setRefreshing(false);
-        //console.log(tempData);
-        
         setData(tempData);
         return tempData;
       }).catch(err=>{
         console.log("something went wrong!",err);
-        return [];
         setRefreshing(false);
+        return [];
       });
     }
 
     const constructor = ()=>{
-        if(constructorFlag == 0){
+        if(constructorFlag === 0){
 
-            let tempData = [
-                {
-                    key:1, name: "Smart 12 Inch tv samsung", Price: 26900, 
-                    src1:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8P-nx0FswkMiwW5wCA5hZcPG1H5kG57DAyg&usqp=CAU",
-                    src2:"https://images-na.ssl-images-amazon.com/images/I/61UTlibhl%2BL._SY741_.jpg",
-                    src3:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcc1K6-WPl6yl84xsY7rROhOMznnJ0FS9gew&usqp=CAU",
-                    stock:1,category:"TV"
-                },
-                {
-                    key:2, name: "Smart 15 Inch android tv phiilips ", Price: 38000, 
-                    src1:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREpRVqfWMlrypPhH4ta1uzWO0Cm_IqCQdU3g&usqp=CAU",
-                    src2:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiWoQ0fFDZyGiaEgCLSdfi3_PNc4US_Cv8LA&usqp=CAU",
-                    src3:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSCd0MB2bEFUXPlZxLTl0J3vI3Z8Jnw2J4UA&usqp=CAU",
-                    stock:1,
-                    category:"TV"
-                },
-            ]
             setConstructorFlag(1);
-            getMetaData();
+            //getMetaData();
             let temp = getData();
-            idTemp = 1;
             console.log("data",temp)
             //setData(tempData[idTemp]);
             //console.log(idTemp,tempData,"data")
@@ -219,7 +171,6 @@ function Product() {
 
         }
     }
-
 
     const addProduct = ()=>()=>{
         console.log("add Product",dataVar,data)
@@ -248,8 +199,6 @@ function Product() {
     }
 
     const changeSrc = (src)=>()=>{
-        console.log("src changed");
-        var url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRQ2QicbufytX1bTxF3xcQUBKpLoaSWb9dEA&usqp=CAU";
         setImgSrc(src)
     }
 
@@ -268,32 +217,32 @@ function Product() {
                                 <Grid item>
                                     <Paper className={classes.paper2}>
                                         <ButtonBase  className={classes.imageSmall} onClick={changeSrc(urlArr[0])}>
-                                            <img className={classes.img}  src={urlArr[0]} />
+                                            <img className={classes.img} alt="loading"  src={urlArr[0]} />
                                         </ButtonBase >
                                     </Paper>
                                 </Grid>
                                 <Grid item>
                                     <Paper className={classes.paper2}>
                                         <ButtonBase  className={classes.imageSmall} onClick={changeSrc(urlArr[1])}>
-                                            <img className={classes.img}  src={urlArr[1]} />
+                                            <img className={classes.img} alt="loading" src={urlArr[1]} />
                                         </ButtonBase >
                                     </Paper>
                                 </Grid>
                                 <Grid item>
                                     <Paper className={classes.paper2}>
                                         <ButtonBase  className={classes.imageSmall} onClick={changeSrc(urlArr[2])}>
-                                            <img className={classes.img}  src={urlArr[2]} />
+                                            <img className={classes.img} alt="loading" src={urlArr[2]} />
                                         </ButtonBase >
                                     </Paper>
                                 </Grid>
                             </Grid>
                             <div className={classes.paper2} style={{height:"100%",}}>
                                     <ButtonBase  className={classes.image}>
-                                        <img className={classes.img2} id="mainImg" src={imgSrc} />
+                                        <img className={classes.img2} alt="loading" id="mainImg" src={imgSrc} />
                                     </ButtonBase >
                             </div>
                         </Grid>
-                        <Grid item xs sm container alignItems="center" justifyContent="flex-start" >
+                        <Grid item xs sm container alignItems="center"  >
                             <Grid item xs container direction="column" spacing={2} alignItems="flex-start" style={{marginLeft:"-5%",backgroundColor:"white",padding:15,borderRadius:15}}>
                                 <Typography gutterBottom variant="h4">
                                     {name}
@@ -313,7 +262,7 @@ function Product() {
                                         Inclusive of all Taxes
                                 </Typography>
                                 <Typography gutterBottom variant="h6" style={{ color: green[500] }}>
-                                        <GolfCourseIcon />   {inStock>10?"In Stock":inStock == 0?"Sold Out":"Hurry up,Only few left"}
+                                        <GolfCourseIcon />   {inStock>10?"In Stock":inStock === 0?"Sold Out":"Hurry up,Only few left"}
                                 </Typography>
                                 <Button
                                     variant="contained"

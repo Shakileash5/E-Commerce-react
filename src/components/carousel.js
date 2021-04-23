@@ -1,18 +1,8 @@
 import React from 'react';
-import { Nav, Navbar, Form, FormControl,Carousel } from 'react-bootstrap';
-import { useHistory } from 'react-router';
+import { Carousel } from 'react-bootstrap';
 
 export const CarouselApp = () => {
-    const history = useHistory();
     
-    const navigateTo = (flag)=>{
-        //history.push("/product");
-        //console.log("cebi")
-        history.push("/search");
-        if( flag){
-            history.push("/search/"+flag);
-        }
-    };
     
   return(
 <Carousel style={{height:200}}>
@@ -24,7 +14,7 @@ export const CarouselApp = () => {
       style={{height:200}}
     />
     <Carousel.Caption>
-      <h3></h3>
+      <h3>{null}</h3>
     </Carousel.Caption>
   </Carousel.Item>
   <Carousel.Item interval={500}>
@@ -35,7 +25,7 @@ export const CarouselApp = () => {
       style={{height:200}}
     />
     <Carousel.Caption>
-      <h3></h3>
+      <h3>{null}</h3>
     </Carousel.Caption>
   </Carousel.Item>
   <Carousel.Item>
@@ -46,7 +36,7 @@ export const CarouselApp = () => {
       style={{height:200}}
     />
     <Carousel.Caption>
-      <h3></h3>
+      <h3>{null}</h3>
     </Carousel.Caption>
   </Carousel.Item>
 </Carousel>
